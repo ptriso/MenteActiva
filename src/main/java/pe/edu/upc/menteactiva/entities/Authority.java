@@ -1,9 +1,13 @@
 package pe.edu.upc.menteactiva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @Table(name="authorities")
@@ -18,6 +22,11 @@ public class Authority {
 
     @Column(name ="name",length = 50,nullable = false)
     private String name;
+
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(mappedBy = "authority", fetch = FetchType.EAGER)
+    private List<User_Authority> user_authority;
 
 
 }
