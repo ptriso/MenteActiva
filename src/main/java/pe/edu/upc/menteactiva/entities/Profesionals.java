@@ -2,11 +2,11 @@ package pe.edu.upc.menteactiva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import pe.edu.upc.menteactiva.enums.Specialization;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +28,10 @@ public class Profesionals {
     @Column(name ="lastname",length = 50,nullable = false)
     private String lastname;
 
-    @Column(name ="specialization",length = 200,nullable = false)
-    private String specialization;
+    @Column(name ="specialization", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Specialization  specialization;
 
-    @Email
     @Column(name ="mail",length = 200,nullable = false)
     private String mail;
 
@@ -43,6 +43,11 @@ public class Profesionals {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(mappedBy = "profesional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Videos> videos = new ArrayList<>();
 
     @JsonIgnore
     @ToString.Exclude

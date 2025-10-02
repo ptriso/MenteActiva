@@ -3,11 +3,13 @@ package pe.edu.upc.menteactiva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="clients")
@@ -26,7 +28,6 @@ public class Clients {
     @Column(name ="lastname",length = 50,nullable = false)
     private String lastname;
 
-    @Email
     @Column(name ="mail",length = 200,nullable = false)
     private String mail;
 
@@ -44,5 +45,14 @@ public class Clients {
     @OneToOne(mappedBy = "client", fetch = FetchType.EAGER)
     private Consents consents;
 
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Appointments> appointments = new ArrayList<>();
+
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToOne(mappedBy = "client", fetch = FetchType.EAGER)
+    private Video_Progress video_progress;
 
 }
