@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalTime;
 
 @Entity
 @Table(name="schedules")
@@ -27,20 +25,20 @@ public class Schedules {
     private LocalDate date;
 
     @Column(name = "time_start", nullable = false)
-    private LocalDateTime time_start;
+    private LocalTime time_start;
 
     @Column(name = "time_ends", nullable = false)
-    private LocalDateTime time_ends;
+    private LocalTime time_ends;
 
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "profesional_id")
-    private Profesionals profesionals;
+    private Profesionals profesional;
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-    private Appointments appointments;
+    @OneToOne(mappedBy = "schedule", fetch = FetchType.EAGER)
+    private Appointments appointment;
 
 }

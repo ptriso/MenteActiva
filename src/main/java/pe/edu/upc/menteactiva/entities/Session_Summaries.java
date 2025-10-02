@@ -32,5 +32,5 @@ public class Session_Summaries {
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id")
-    private Appointments appointments;
+    private Appointments appointment;
 }

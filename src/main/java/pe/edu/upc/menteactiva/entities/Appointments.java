@@ -35,7 +35,7 @@ public class Appointments {
     @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedules_id")
-    private Schedules schedules;
+    private Schedules schedule;
 
     @JsonIgnore
     @ToString.Exclude
