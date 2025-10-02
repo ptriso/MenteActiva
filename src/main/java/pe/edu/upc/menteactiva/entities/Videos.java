@@ -1,5 +1,6 @@
 package pe.edu.upc.menteactiva.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,30 +8,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name="schedules")
+@Table(name="videos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Schedules {
+public class Videos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "date", nullable = false)
-    private LocalDate date;
+    @Column(name = "title", length = 50, nullable = false)
+    private String title;
 
-    @Column(name = "time_start", nullable = false)
-    private LocalDateTime time_start;
+    @Column(name = "description", length = 150, nullable = false)
+    private String description;
 
-    @Column(name = "time_ends", nullable = false)
-    private LocalDateTime time_ends;
+    @Column(name = "url", length = 50, nullable = false)
+    private String url;
+
+    @Column(name = "duration", nullable = false)
+    private Long duration;
 
     @JsonIgnore
     @ToString.Exclude
@@ -40,7 +39,7 @@ public class Schedules {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-    private Appointments appointments;
+    @OneToOne(mappedBy = "video", fetch = FetchType.EAGER)
+    private Video_Progress video_progress;
 
 }
