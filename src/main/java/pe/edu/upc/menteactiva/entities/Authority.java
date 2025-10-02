@@ -26,7 +26,7 @@ public class Authority {
     @JsonIgnore
     @ToString.Exclude
     @OneToMany(mappedBy = "authority", fetch = FetchType.EAGER)
-    private List<User_Authority> user_authority;
+    private List<User_Authority> user_authorities;
 
 
 }

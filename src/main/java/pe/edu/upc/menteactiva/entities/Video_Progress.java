@@ -21,18 +21,18 @@ public class Video_Progress {
     @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "client_id")
-    private Clients clients;
+    private Clients client;
 
     @JsonIgnore
     @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "video_id")
-    private Videos videos;
+    private Videos video;
 
     @Column(name = "percentage", nullable = false)
     private Long percentage;
 
-    @Column(name = "current_time", nullable = false)
+    @Column(name = "current_times", nullable = false)
     private Integer current_time;
 
     @Column(name = "completed", nullable = false)

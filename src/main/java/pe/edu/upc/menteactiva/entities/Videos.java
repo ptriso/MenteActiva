@@ -35,7 +35,7 @@ public class Videos {
     @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "profesional_id")
-    private Profesionals profesionals;
+    private Profesionals profesional;
 
     @JsonIgnore
     @ToString.Exclude
