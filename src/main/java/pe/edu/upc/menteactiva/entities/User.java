@@ -34,5 +34,15 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<User_Authority> user_authority;
 
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+    private Clients clients;
+
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+    private Profesionals profesionals;
+
 
 }
