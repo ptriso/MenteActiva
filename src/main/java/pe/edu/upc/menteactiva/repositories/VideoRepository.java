@@ -1,8 +1,8 @@
 package pe.edu.upc.menteactiva.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pe.edu.upc.menteactiva.entities.Profesionals;
+import pe.edu.upc.menteactiva.entities.Videos;
 
-public interface ProfesionalsRepository extends JpaRepository<Profesionals, Long> {
+public interface VideoRepository extends JpaRepository<Videos, Long> {
     boolean existsById(Long id);
 }
