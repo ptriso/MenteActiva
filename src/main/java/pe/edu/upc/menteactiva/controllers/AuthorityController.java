@@ -1,12 +1,12 @@
 package pe.edu.upc.menteactiva.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.upc.menteactiva.dtos.request.AuthorityRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AuthorityResponseDTO;
 import pe.edu.upc.menteactiva.entities.Authority;
 import pe.edu.upc.menteactiva.services.AuthorityService;
 
@@ -20,9 +20,24 @@ public class AuthorityController {
     @Autowired
     AuthorityService authorityService;
 
+    @PostMapping("/registrar")
+    public ResponseEntity<AuthorityResponseDTO> registrar(@Valid @RequestBody AuthorityRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authorityService.create(dto));
+    }
+
+
     @GetMapping("/listartodos")
-    public ResponseEntity<List<Authority>> GetAllAuthorities(){
-        List<Authority> authorities = authorityService.GetAllAuthorities();
-        return new ResponseEntity<>(authorities, HttpStatus.OK);
+    public List<AuthorityResponseDTO> listall(){
+        return authorityService.GetAllAuthorities();
+    }
+
+    @PutMapping("/modificar/{id}")
+    public ResponseEntity<AuthorityResponseDTO> update (@PathVariable Long id, @Valid @RequestBody AuthorityRequestDTO dto) {
+        return ResponseEntity.ok(authorityService.update(id, dto));
+    }
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        authorityService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

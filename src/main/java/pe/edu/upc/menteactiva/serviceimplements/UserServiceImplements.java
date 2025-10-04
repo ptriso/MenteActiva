@@ -1,7 +1,12 @@
 package pe.edu.upc.menteactiva.serviceimplements;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import pe.edu.upc.menteactiva.dtos.request.UserRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.UserResponseDTO;
 import pe.edu.upc.menteactiva.entities.User;
 import pe.edu.upc.menteactiva.repositories.UserRepository;
 import pe.edu.upc.menteactiva.services.UserService;
@@ -14,8 +19,46 @@ public class UserServiceImplements implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
-    public List<User> GetAllUsers() {
-        return userRepository.findAll();
+    public UserResponseDTO create (UserRequestDTO dto)
+    {
+        if(userRepository.existsByUsername(dto.getUsername()))
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"nombre ya existente");
+        }
+        User user = modelMapper.map(dto, User.class);
+        user.setId(null);
+
+        return modelMapper.map(userRepository.save(user), UserResponseDTO.class);
+    }
+
+    @Override
+    public UserResponseDTO update (Long id, UserRequestDTO dto)
+    {
+        User user = userRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario no encontrado"));
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setEnabled(dto.getEnabled());
+        return modelMapper.map(userRepository.save(user), UserResponseDTO.class);
+    }
+
+    @Override
+    public void delete(Long id)
+    {
+        if(!userRepository.existsById(id))
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Usuario no encontrado");
+        }
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UserResponseDTO> GetAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> modelMapper.map(user, UserResponseDTO.class))
+                .toList();
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.SchedulesRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.SchedulesResponseDTO;
 import pe.edu.upc.menteactiva.entities.Schedules;
-import pe.edu.upc.menteactiva.repositories.ProfesionalsRepository;
+import pe.edu.upc.menteactiva.repositories.ProfessionalsRepository;
 import pe.edu.upc.menteactiva.repositories.SchedulesRepository;
 import pe.edu.upc.menteactiva.services.SchedulesService;
 
@@ -21,7 +21,7 @@ public class SchedulesServiceImplements implements SchedulesService {
     private SchedulesRepository schedulesRepository;
 
     @Autowired
-    private ProfesionalsRepository profesionalsRepository;
+    private ProfessionalsRepository profesionalsRepository;
 
     @Autowired
     private ModelMapper modelMapper;

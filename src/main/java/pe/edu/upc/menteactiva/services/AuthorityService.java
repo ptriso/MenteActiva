@@ -1,10 +1,15 @@
 package pe.edu.upc.menteactiva.services;
 
+import pe.edu.upc.menteactiva.dtos.request.AuthorityRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AuthorityResponseDTO;
 import pe.edu.upc.menteactiva.entities.Authority;
 
 import java.util.List;
 
 public interface AuthorityService {
 
-    List<Authority> GetAllAuthorities();
+    AuthorityResponseDTO create (AuthorityRequestDTO dto);
+    AuthorityResponseDTO update (Long id, AuthorityRequestDTO dto);
+    void delete(Long id);
+    List<AuthorityResponseDTO> GetAllAuthorities();
 }

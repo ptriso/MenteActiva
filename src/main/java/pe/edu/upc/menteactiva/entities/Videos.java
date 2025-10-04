@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.Duration;
+
 @Entity
 @Table(name="videos")
 @Data
@@ -29,7 +31,7 @@ public class Videos {
     private String url;
 
     @Column(name = "duration", nullable = false)
-    private Long duration;
+    private Duration duration;
 
     @JsonIgnore
     @ToString.Exclude
