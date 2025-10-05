@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface User_AuthorityService {
 
-    //User_AuthorityResponseDTO add(User_AuthorityRequestDTO dto);
-
-    public List<User_Authority> GetAllUser_Authorities();
+    User_AuthorityResponseDTO assign(User_AuthorityRequestDTO dto);
+    void remove(Long id);
+    List<User_AuthorityResponseDTO> listAll();
 }

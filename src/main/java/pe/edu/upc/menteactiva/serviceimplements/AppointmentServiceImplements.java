@@ -14,6 +14,7 @@ import pe.edu.upc.menteactiva.entities.Status;
 import pe.edu.upc.menteactiva.repositories.AppointmentRepository;
 import pe.edu.upc.menteactiva.repositories.ClientRepository;
 import pe.edu.upc.menteactiva.repositories.SchedulesRepository;
+import pe.edu.upc.menteactiva.repositories.StatusRepository;
 import pe.edu.upc.menteactiva.services.AppointmentService;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class AppointmentServiceImplements implements AppointmentService {
     @Autowired
     private ClientRepository clientRepository;
 
-    //@Autowired
-    //private StatusRepository statusRepository;
+    @Autowired
+    private StatusRepository statusRepository;
 
     @Autowired
     private SchedulesRepository schedulesRepository;
@@ -41,15 +42,15 @@ public class AppointmentServiceImplements implements AppointmentService {
         Clients client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
 
-        //Status status = statusRepository.findById(dto.getStatusId())
-        //.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
+        Status status = statusRepository.findById(dto.getStatusId())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
 
         Schedules schedule = schedulesRepository.findById(dto.getScheduleId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado"));
 
         Appointments appointment = new Appointments();
         appointment.setClient(client);
-        //appointment.setStatus(status);
+        appointment.setStatus(status);
         appointment.setSchedule(schedule);
 
         return modelMapper.map(appointmentsRepository.save(appointment), AppointmentResponseDTO.class);
@@ -57,19 +58,18 @@ public class AppointmentServiceImplements implements AppointmentService {
     @Override
     public AppointmentResponseDTO update(Long id, AppointmentRequestDTO dto) {
         Appointments appointment = appointmentsRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada"));
-
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada."));
         Clients client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado."));
 
-        //Status status = statusRepository.findById(dto.getStatusId())
-          //      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
+        Status status = statusRepository.findById(dto.getStatusId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado."));
 
         Schedules schedule = schedulesRepository.findById(dto.getScheduleId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado."));
 
         appointment.setClient(client);
-        //appointment.setStatus(status);
+        appointment.setStatus(status);
         appointment.setSchedule(schedule);
 
         return modelMapper.map(appointmentsRepository.save(appointment), AppointmentResponseDTO.class);
