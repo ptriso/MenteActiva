@@ -1,9 +1,12 @@
 package pe.edu.upc.menteactiva.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pe.edu.upc.menteactiva.dtos.request.User_AuthorityRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.User_AuthorityResponseDTO;
 import pe.edu.upc.menteactiva.entities.User_Authority;
 import pe.edu.upc.menteactiva.services.User_AuthorityService;
 
@@ -18,9 +21,19 @@ public class User_AuthorityController {
     User_AuthorityService user_AuthorityService;
 
 
+    @PostMapping("/asignar")
+    public ResponseEntity<User_AuthorityResponseDTO> assign(@Valid @RequestBody User_AuthorityRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(user_AuthorityService.assign(dto));
+    }
+
     @GetMapping("/listartodos")
-    public ResponseEntity<List<User_Authority>> GetAllUser_Authorities(){
-        List<User_Authority> user_authorities = user_AuthorityService.GetAllUser_Authorities();
-        return new ResponseEntity<>(user_authorities, HttpStatus.OK);
+    public List<User_AuthorityResponseDTO> listAll() {
+        return user_AuthorityService.listAll();
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
+        user_AuthorityService.remove(id);
+        return ResponseEntity.ok().build();
     }
 }

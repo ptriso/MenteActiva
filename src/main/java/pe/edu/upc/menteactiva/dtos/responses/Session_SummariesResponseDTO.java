@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class User_AuthorityResponseDTO {
-
+@AllArgsConstructor
+public class Session_SummariesResponseDTO {
     private Long id;
-    private Long userId;
-    private Long authorityId;
-
+    private String task;
+    private String progress;
+    private String conclusion;
+    private Long appointmentId;
 }

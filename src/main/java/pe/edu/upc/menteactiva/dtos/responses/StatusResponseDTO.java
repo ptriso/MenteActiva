@@ -5,12 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class User_AuthorityResponseDTO {
-
+@AllArgsConstructor
+public class StatusResponseDTO {
     private Long id;
-    private Long userId;
-    private Long authorityId;
-
+    private String name;
+    private String description;
 }

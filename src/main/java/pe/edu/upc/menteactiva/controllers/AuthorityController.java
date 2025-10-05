@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.AuthorityRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AuthorityResponseDTO;
-import pe.edu.upc.menteactiva.entities.Authority;
 import pe.edu.upc.menteactiva.services.AuthorityService;
 
 import java.util.List;
