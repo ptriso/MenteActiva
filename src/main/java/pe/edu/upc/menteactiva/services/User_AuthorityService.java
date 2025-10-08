@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface User_AuthorityService {
 
-    User_AuthorityResponseDTO assign(User_AuthorityRequestDTO dto);
+    User_AuthorityResponseDTO create(User_AuthorityRequestDTO dto);
+    User_AuthorityResponseDTO update(Long id, User_AuthorityRequestDTO dto);
     void remove(Long id);
     List<User_AuthorityResponseDTO> listAll();
 }

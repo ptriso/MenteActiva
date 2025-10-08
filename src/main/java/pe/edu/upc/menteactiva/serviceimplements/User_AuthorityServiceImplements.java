@@ -32,14 +32,13 @@ public class User_AuthorityServiceImplements implements User_AuthorityService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public User_AuthorityResponseDTO assign(User_AuthorityRequestDTO dto) {
+    public User_AuthorityResponseDTO create(User_AuthorityRequestDTO dto) {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
         Authority authority = authorityRepository.findById(dto.getAuthorityId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Autoridad no encontrada"));
 
-        // Validar si ya existe la relación
         if (user_AuthorityRepository.existsByUserIdAndAuthorityId(user.getId(), authority.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya tiene esta autoridad asignada");
         }
@@ -47,6 +46,26 @@ public class User_AuthorityServiceImplements implements User_AuthorityService {
         User_Authority ua = new User_Authority();
         ua.setUser(user);
         ua.setAuthority(authority);
+
+        return modelMapper.map(user_AuthorityRepository.save(ua), User_AuthorityResponseDTO.class);
+    }
+
+    @Override
+    public User_AuthorityResponseDTO update(Long id, User_AuthorityRequestDTO dto)
+    {
+        User_Authority ua = user_AuthorityRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Relación no encontrada"));
+
+        User user= userRepository.findById(dto.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        Authority auth = authorityRepository.findById(dto.getAuthorityId()).orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Autoridad no encontrada"));
+
+        boolean existsCombo = user_AuthorityRepository.existsByUserIdAndAuthorityId(user.getId(), auth.getId());
+        if (existsCombo && !(ua.getUser().getId().equals(user.getId()) && ua.getAuthority().getId().equals(auth.getId()))) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe la relación usuario-authority");
+        }
+
+        ua.setUser(user);
+        ua.setAuthority(auth);
 
         return modelMapper.map(user_AuthorityRepository.save(ua), User_AuthorityResponseDTO.class);
     }
