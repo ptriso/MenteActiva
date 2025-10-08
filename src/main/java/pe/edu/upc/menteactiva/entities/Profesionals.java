@@ -46,11 +46,11 @@ public class Profesionals {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "profesional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "profesional", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Videos> videos = new ArrayList<>();
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "profesional", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "profesional", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Schedules> schedules = new ArrayList<>();
 }

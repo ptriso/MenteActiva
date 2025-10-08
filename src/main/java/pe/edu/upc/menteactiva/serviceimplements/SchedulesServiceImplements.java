@@ -28,27 +28,37 @@ public class SchedulesServiceImplements implements SchedulesService {
 
     @Override
     public SchedulesResponseDTO create(SchedulesRequestDTO dto) {
-        if(!profesionalsRepository.existsById(dto.getProfesionalId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profesional no encontrado");
-        }
+        var prof = profesionalsRepository.findById(dto.getProfesionalId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profesional no encontrado"));
+
         Schedules s = modelMapper.map(dto, Schedules.class);
         s.setId(null);
-        return modelMapper.map(schedulesRepository.save(s), SchedulesResponseDTO.class);
+        s.setProfesional(prof);
+
+        s = schedulesRepository.save(s);
+        SchedulesResponseDTO out = modelMapper.map(s, SchedulesResponseDTO.class);
+        out.setProfesionalId(s.getProfesional().getId());
+        return out;
     }
     @Override
     public SchedulesResponseDTO update(Long id, SchedulesRequestDTO dto)
     {
-        Schedules s = schedulesRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado"));
+        Schedules s = schedulesRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado"));
 
-        if(!profesionalsRepository.existsById(dto.getProfesionalId()))
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profesional no encontrado");
+        if (dto.getProfesionalId() != null) {
+            var prof = profesionalsRepository.findById(dto.getProfesionalId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profesional no encontrado"));
+            s.setProfesional(prof);
         }
         s.setDate(dto.getDate());
         s.setTime_start(dto.getTime_start());
         s.setTime_ends(dto.getTime_ends());
 
-        return  modelMapper.map(schedulesRepository.save(s), SchedulesResponseDTO.class);
+        s = schedulesRepository.save(s);
+        SchedulesResponseDTO out = modelMapper.map(s, SchedulesResponseDTO.class);
+        out.setProfesionalId(s.getProfesional().getId());
+        return out;
     }
 
     @Override
@@ -61,6 +71,10 @@ public class SchedulesServiceImplements implements SchedulesService {
 
     @Override
     public List<SchedulesResponseDTO> listAll() {
-        return schedulesRepository.findAll().stream().map(s-> modelMapper.map(s, SchedulesResponseDTO.class)).toList();
+        return schedulesRepository.findAll().stream().map(s -> {
+            SchedulesResponseDTO dto = modelMapper.map(s, SchedulesResponseDTO.class);
+            dto.setProfesionalId((s.getProfesional() != null) ? s.getProfesional().getId() : null);
+            return dto;
+        }).toList();
     }
 }

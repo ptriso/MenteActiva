@@ -42,12 +42,12 @@ public class Clients {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(mappedBy = "client", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "client",orphanRemoval = true, fetch = FetchType.EAGER)
     private Consents consents;
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "client", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Appointments> appointments = new ArrayList<>();
 
     @JsonIgnore

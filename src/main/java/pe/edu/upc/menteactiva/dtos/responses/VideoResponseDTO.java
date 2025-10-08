@@ -14,6 +14,6 @@ public class VideoResponseDTO {
     private String title;
     private String description;
     private String url;
-    private Duration duration;
+    private Integer duration;
     private Long professionalId;
 }
