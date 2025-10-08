@@ -32,8 +32,8 @@ public class Schedules {
 
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "profesional_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profesional_id", nullable = false)
     private Profesionals profesional;
 
     @JsonIgnore

@@ -4,9 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.VideoRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.VideoResponseDTO;
+import pe.edu.upc.menteactiva.entities.Profesionals;
 import pe.edu.upc.menteactiva.entities.Videos;
 import pe.edu.upc.menteactiva.repositories.ProfessionalsRepository;
 import pe.edu.upc.menteactiva.repositories.VideoRepository;
@@ -25,30 +27,40 @@ public class VideoServiceImplements  implements VideoService {
     private ModelMapper modelMapper;
 
     @Override
-    public VideoResponseDTO create (VideoRequestDTO dto)
-    {
-        if(!professionalsRepository.existsById(dto.getProfessionalId()))
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El professional no existe");
-        }
+    @Transactional
+    public VideoResponseDTO create(VideoRequestDTO dto) {
+        Profesionals prof = professionalsRepository
+                .findById(dto.getProfessionalId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"El profesional no existe"));
+
         Videos v = modelMapper.map(dto, Videos.class);
         v.setId(null);
-        return modelMapper.map(videoRepository.save(v), VideoResponseDTO.class);
+        v.setProfesional(prof);
+        v.setDuration(dto.getDuration());
+
+        v = videoRepository.save(v);
+        VideoResponseDTO out = modelMapper.map(v, VideoResponseDTO.class);
+        out.setProfessionalId(v.getProfesional().getId()); // <- 1
+        return out;
     }
     @Override
     public VideoResponseDTO update (Long id, VideoRequestDTO dto)
     {
-        Videos v = videoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El video no existe"));
-        if(!professionalsRepository.existsById(dto.getProfessionalId()))
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El professional no existe");
+        Videos v = videoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El video no existe"));
+        if (dto.getProfessionalId() != null) {
+            Profesionals prof = professionalsRepository.findById(dto.getProfessionalId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El profesional no existe"));
+            v.setProfesional(prof);
         }
         v.setTitle(dto.getTitle());
         v.setDescription(dto.getDescription());
         v.setUrl(dto.getUrl());
         v.setDuration(dto.getDuration());
 
-        return modelMapper.map(videoRepository.save(v), VideoResponseDTO.class);
+        VideoResponseDTO out = modelMapper.map(v, VideoResponseDTO.class);
+        out.setProfessionalId(v.getProfesional().getId());
+        return out;
     }
     @Override
     public void delete(Long id)
@@ -62,6 +74,14 @@ public class VideoServiceImplements  implements VideoService {
 
     @Override
     public List<VideoResponseDTO> listAll() {
-        return videoRepository.findAll().stream().map( v-> modelMapper.map(v, VideoResponseDTO.class)).toList();
+        List<Videos> list = videoRepository.findAll();
+
+        return list.stream().map(v -> {
+            VideoResponseDTO dto = modelMapper.map(v, VideoResponseDTO.class);
+            dto.setProfessionalId(
+                    (v.getProfesional() != null) ? v.getProfesional().getId() : null
+            );
+            return dto;
+        }).toList();
     }
 }

@@ -21,22 +21,22 @@ public class Videos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", length = 50, nullable = false)
+    @Column(name = "title", length = 150, nullable = false)
     private String title;
 
-    @Column(name = "description", length = 150, nullable = false)
+    @Column(name = "description", length = 2000, nullable = false)
     private String description;
 
-    @Column(name = "url", length = 50, nullable = false)
+    @Column(name = "url", length = 500, nullable = false)
     private String url;
 
     @Column(name = "duration", nullable = false)
-    private Duration duration;
+    private Integer duration;
 
     @JsonIgnore
     @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "profesional_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profesional_id", nullable = false)
     private Profesionals profesional;
 
     @JsonIgnore

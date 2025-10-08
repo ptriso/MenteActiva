@@ -23,12 +23,12 @@ public class VideoRequestDTO {
     @NotBlank(message = "El campo no puede estar vacio")
     @Pattern(
             regexp = "^(https?|ftp)://.*$",
-            message = "La URL de la foto debe ser válida"
+            message = "La URL del video debe ser válida"
     )
     private String url;
 
     @NotNull(message = "El campo no puede estar vacio")
-    private Duration duration;
+    private Integer duration;
 
     @NotNull(message = "El campo no puede estar vacio")
     private Long professionalId;

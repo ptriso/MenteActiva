@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
@@ -28,12 +29,20 @@ public class ProfessionalServiceImplements implements ProfessionalService {
 
     @Override
     public ProfessionalResponseDTO create(ProfessionalRequestDTO dto) {
+
+        String name = dto.getName().trim();
+        String lastname = dto.getLastname().trim();
         if(!userRepository.existsById(dto.getUserId()))
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
         }
+        if (professionalsRepository.existsByNameAndLastname(lastname, name)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un profesional con ese nombre y apellido");
+        }
         Profesionals p = modelMapper.map(dto, Profesionals.class);
         p.setId(null);
+        p.setName(name);
+        p.setLastname(lastname);
         return modelMapper.map(professionalsRepository.save(p), ProfessionalResponseDTO.class);
     }
     @Override
@@ -44,6 +53,13 @@ public class ProfessionalServiceImplements implements ProfessionalService {
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
         }
+        String name = dto.getName().trim();
+        String lastname = dto.getLastname().trim();
+
+        if (professionalsRepository.existsByNameAndLastname(name, lastname)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe otro profesional con ese nombre y apellido");
+        }
+
         p.setName(dto.getName());
         p.setLastname(dto.getLastname());
         p.setSpecialization(dto.getSpecialization());
@@ -54,12 +70,13 @@ public class ProfessionalServiceImplements implements ProfessionalService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         if(!professionalsRepository.existsById(id))
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profesional no encontrado");
         }
-        professionalsRepository.deleteById(id);
+        professionalsRepository.deleteProfesionalsById(id);
     }
     @Override
     public List<ProfessionalResponseDTO>listAll()
