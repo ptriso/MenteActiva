@@ -23,7 +23,7 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentService.create(dto));
     }
 
-    @GetMapping("/listartodo")
+    @GetMapping("/listartodos")
     public List<AppointmentResponseDTO> listAll() {
         return appointmentService.listAll();
     }

@@ -1,11 +1,10 @@
 package pe.edu.upc.menteactiva.dtos.responses;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Video_ProgressResponseDTO {
