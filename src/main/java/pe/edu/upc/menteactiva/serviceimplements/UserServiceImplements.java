@@ -57,8 +57,18 @@ public class UserServiceImplements implements UserService {
 
     @Override
     public List<UserResponseDTO> GetAllUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user, UserResponseDTO.class))
-                .toList();
+        return userRepository.findAll().stream().map(user -> {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setUsername(user.getUsername());
+            dto.setEnabled(user.isEnabled());
+
+            List<String> roles = user.getUser_authority().stream()
+                    .map(ua -> ua.getAuthority().getName())
+                    .toList();
+            dto.setAuthorities(roles);
+
+            return dto;
+        }).toList();
     }
 }

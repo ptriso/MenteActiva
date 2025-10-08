@@ -20,6 +20,4 @@ public class UserRequestDTO {
     @NotNull(message = "El campo no puede estar vacio")
     private Boolean enabled;
 
-    @NotNull(message = "El campo no puede estar vacio")
-    private Long authorityId;
 }

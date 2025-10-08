@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,6 @@ public class UserResponseDTO {
     private String username;
     private Boolean enabled;
 
-    private AuthorityResponseDTO authorities;
+    private List<String> authorities;
 
 }
