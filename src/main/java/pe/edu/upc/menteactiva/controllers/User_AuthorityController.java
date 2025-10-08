@@ -21,9 +21,13 @@ public class User_AuthorityController {
     User_AuthorityService user_AuthorityService;
 
 
-    @PostMapping("/asignar")
-    public ResponseEntity<User_AuthorityResponseDTO> assign(@Valid @RequestBody User_AuthorityRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(user_AuthorityService.assign(dto));
+    @PostMapping("/registrar")
+    public ResponseEntity<User_AuthorityResponseDTO> create(@Valid @RequestBody User_AuthorityRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(user_AuthorityService.create(dto));
+    }
+    @PutMapping("/modificar/{id}")
+    public ResponseEntity<User_AuthorityResponseDTO> update(@PathVariable Long id, @Valid @RequestBody User_AuthorityRequestDTO dto) {
+        return ResponseEntity.ok(user_AuthorityService.update(id, dto));
     }
 
     @GetMapping("/listartodos")
