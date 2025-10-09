@@ -1,7 +1,7 @@
 package pe.edu.upc.menteactiva.services;
 
 import pe.edu.upc.menteactiva.dtos.request.VideoRequestDTO;
-import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_MostViewedVideosDTO;
+import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_MostViewedVideosDTO;
 import pe.edu.upc.menteactiva.dtos.responses.VideoResponseDTO;
 import pe.edu.upc.menteactiva.entities.Videos;
 
