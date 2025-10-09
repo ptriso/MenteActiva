@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_TotalCitasPorProfesionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
 import pe.edu.upc.menteactiva.entities.Profesionals;
 import pe.edu.upc.menteactiva.enums.Specialization;
@@ -84,5 +85,18 @@ public class ProfessionalServiceImplements implements ProfessionalService {
     {
         return professionalsRepository.findAll().stream().map(p -> modelMapper.map(p, ProfessionalResponseDTO.class)).toList();
     }
+
+    @Override
+    public List<NativeQuery_TotalCitasPorProfesionalDTO> countAppointmentsByProfessional() {
+        return professionalsRepository.countAppointmentsByProfessional()
+                .stream()
+                .map(obj -> new NativeQuery_TotalCitasPorProfesionalDTO(
+                        (String) obj[0],                // nombre
+                        (String) obj[1],                // apellido
+                        ((Number) obj[2]).longValue()   // cantidad de citas
+                ))
+                .toList();
+    }
+
 
 }

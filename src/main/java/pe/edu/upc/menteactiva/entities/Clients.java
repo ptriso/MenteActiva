@@ -50,7 +50,7 @@ public class Clients {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(mappedBy = "client", fetch = FetchType.EAGER)
-    private Video_Progress video_progress;
+    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+    private List<Video_Progress> video_progress;
 
 }

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.UserRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_UserClientDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_UserProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.UserResponseDTO;
 import pe.edu.upc.menteactiva.services.UserService;
 
@@ -39,5 +41,15 @@ public class UserController {
     public ResponseEntity<Void> delete(@PathVariable Long id){
         userService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/UsuariosProfesionales")
+    public ResponseEntity<List<NativeQuery_UserProfessionalDTO>> getUsersWhoAreProfessionals() {
+        return ResponseEntity.ok(userService.getUsersWhoAreProfessionals());
+    }
+
+    @GetMapping("/UsuariosClientes")
+    public ResponseEntity<List<NativeQuery_UserClientDTO>> getUsersWhoAreClients() {
+        return ResponseEntity.ok(userService.getUsersWhoAreClients());
     }
 }

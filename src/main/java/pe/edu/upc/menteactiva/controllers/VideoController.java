@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.VideoRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_MostViewedVideosDTO;
 import pe.edu.upc.menteactiva.dtos.responses.VideoResponseDTO;
+import pe.edu.upc.menteactiva.repositories.VideoRepository;
 import pe.edu.upc.menteactiva.entities.Videos;
 import pe.edu.upc.menteactiva.services.VideoService;
 
@@ -28,6 +30,7 @@ public class VideoController {
     public List<VideoResponseDTO> listAll() {
         return videoService.listAll();
     }
+
     @PutMapping("/modificar/{id}")
     public ResponseEntity<VideoResponseDTO> update(@PathVariable Long id, @Valid @RequestBody VideoRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(videoService.update(id, dto));
@@ -37,6 +40,10 @@ public class VideoController {
         videoService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/VideosMasVistos")
+    public ResponseEntity<List<NativeQuery_MostViewedVideosDTO>> getMostViewedVideosWithAuthor() {
+        return ResponseEntity.ok(videoService.getMostViewedVideos());
     @GetMapping("/{professionalId}/top-largos")
     public List<Videos> top5MasLargos(@PathVariable Long professionalId) {
         return videoService.top5MasLargosPorProfesional(professionalId);
