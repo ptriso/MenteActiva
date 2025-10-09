@@ -36,4 +36,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             """,
             nativeQuery = true)
     List<Object[]> getUsersWhoAreClients();
+
+    User findByUsername(String username);
 }

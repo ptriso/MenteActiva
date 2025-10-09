@@ -30,7 +30,7 @@ public class Video_Progress {
     @Column(name = "percentage", nullable = false)
     private Long percentage;
 
-    @Column(name = "current_time", nullable = false)
+    @Column(name = "current_times", nullable = false)
     private Integer current_time;
 
     @Column(name = "completed", nullable = false)
