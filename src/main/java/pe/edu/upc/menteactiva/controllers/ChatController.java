@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.ChatRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ChatResponseDTO;
+import pe.edu.upc.menteactiva.entities.Chats;
 import pe.edu.upc.menteactiva.services.ChatService;
 
 import java.util.List;
@@ -35,5 +36,9 @@ public class ChatController {
     public ResponseEntity<Void> delete(@PathVariable Long id){
         chatService.delete(id);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/cliente/{clientId}")
+    public List<Chats> historialPorCliente(@PathVariable Long clientId) {
+        return chatService.historialPorCliente(clientId);
     }
 }

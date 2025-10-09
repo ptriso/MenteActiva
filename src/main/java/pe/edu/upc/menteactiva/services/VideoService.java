@@ -15,4 +15,5 @@ public interface VideoService {
 
     List<Videos> top5MasLargosPorProfesional(Long professionalId);
     long contarPorProfesional(Long professionalId);
+    List<Videos> buscarPorTitulo(String q);
 }

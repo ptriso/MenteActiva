@@ -45,4 +45,9 @@ public class VideoController {
     public long contarPorProfesional(@PathVariable Long professionalId) {
         return videoService.contarPorProfesional(professionalId);
     }
+    @GetMapping("/search")
+    public List<Videos> search(@RequestParam String q) {
+        return videoService.buscarPorTitulo(q);
+    }
+
 }
