@@ -4,14 +4,26 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.UserRequestDTO;
 import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_UserClientDTO;
 import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_UserProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.UserResponseDTO;
+import pe.edu.upc.menteactiva.dtos.security.DTOToken;
+import pe.edu.upc.menteactiva.dtos.security.DTOUser;
+import pe.edu.upc.menteactiva.entities.User;
+import pe.edu.upc.menteactiva.security.JwtUtilService;
+import pe.edu.upc.menteactiva.security.UserSecurity;
 import pe.edu.upc.menteactiva.services.UserService;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -20,6 +32,108 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtilService jwtUtilService;
+
+    // Endpoint de Login
+    @PostMapping("/login")
+    public ResponseEntity<DTOToken> login(@RequestBody DTOUser credentials) {
+        try {
+            // Autenticar usuario
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            credentials.getUsername(),
+                            credentials.getPassword()
+                    )
+            );
+
+            // Cargar detalles del usuario
+            UserSecurity userSecurity = (UserSecurity) userDetailsService
+                    .loadUserByUsername(credentials.getUsername());
+
+            // Generar token JWT
+            String jwt = jwtUtilService.generateToken(userSecurity);
+
+            // Extraer información del usuario
+            Long id = userSecurity.getUser().getId();
+            String authorities = userSecurity.getUser().getUser_authority()
+                    .stream()
+                    .map(ua -> ua.getAuthority().getName())
+                    .collect(Collectors.joining(";"));
+
+            DTOToken response = new DTOToken(jwt, id, userSecurity.getUsername(), authorities);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    // Endpoint de Registro
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody DTOUser dtoUser) {
+        try {
+            System.out.println("📝 Iniciando registro: " + dtoUser.getUsername());
+
+            // Si no especifica authorities, usar ROLE_USER
+            if (dtoUser.getAuthorities() == null || dtoUser.getAuthorities().isBlank()) {
+                dtoUser.setAuthorities("ROLE_USER");
+            }
+
+            // Registrar usuario (esto funciona correctamente según los logs)
+            User newUser = userService.addUser(dtoUser);
+
+            // Construir respuesta manualmente SIN consultar la BD nuevamente
+            List<String> authoritiesList = Arrays.asList(dtoUser.getAuthorities().split(";"));
+
+            UserResponseDTO response = new UserResponseDTO(
+                    newUser.getId(),
+                    newUser.getUsername(),
+                    newUser.isEnabled(),
+                    authoritiesList
+            );
+
+            System.out.println("Usuario registrado exitosamente con ID: " + newUser.getId());
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (RuntimeException e) {
+            System.err.println("Error: " + e.getMessage());
+
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (Exception e) {
+            System.err.println("Error inesperado: " + e.getMessage());
+            e.printStackTrace();
+
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error interno del servidor");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    // Obtener usuario por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable("id") Long id) {
+        try {
+            UserResponseDTO user = userService.findByIdDTO(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @PostMapping("/registrar")
     public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequestDTO dto){
