@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upc.menteactiva.entities.Profesionals;
+import pe.edu.upc.menteactiva.enums.Specialization;
+
+import java.util.List;
 
 public interface ProfessionalsRepository extends JpaRepository<Profesionals, Long> {
     boolean existsById(Long id);
@@ -14,4 +17,6 @@ public interface ProfessionalsRepository extends JpaRepository<Profesionals, Lon
     @Transactional
     @Query(value = "DELETE FROM profesionals WHERE id = :id", nativeQuery = true)
     void deleteProfesionalsById(@Param("id") Long id);
+
+
 }

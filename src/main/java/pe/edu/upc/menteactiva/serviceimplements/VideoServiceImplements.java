@@ -84,4 +84,13 @@ public class VideoServiceImplements  implements VideoService {
             return dto;
         }).toList();
     }
+    @Override
+    public List<Videos> top5MasLargosPorProfesional(Long professionalId) {
+        return videoRepository.findTop5ByProfesional_IdOrderByDurationDesc(professionalId);
+    }
+
+    @Override
+    public long contarPorProfesional(Long professionalId) {
+        return videoRepository.countByProfesional_Id(professionalId);
+    }
 }

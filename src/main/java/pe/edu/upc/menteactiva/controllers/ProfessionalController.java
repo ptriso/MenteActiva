@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
+import pe.edu.upc.menteactiva.enums.Specialization;
 import pe.edu.upc.menteactiva.services.ProfessionalService;
 
 import java.util.List;
@@ -38,4 +39,5 @@ public class ProfessionalController {
         professionalService.delete(id);
         return ResponseEntity.ok().build();
     }
+
 }

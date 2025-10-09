@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
 import pe.edu.upc.menteactiva.entities.Profesionals;
+import pe.edu.upc.menteactiva.enums.Specialization;
 import pe.edu.upc.menteactiva.repositories.ProfessionalsRepository;
 import pe.edu.upc.menteactiva.repositories.UserRepository;
 import pe.edu.upc.menteactiva.services.ProfessionalService;
@@ -83,4 +84,5 @@ public class ProfessionalServiceImplements implements ProfessionalService {
     {
         return professionalsRepository.findAll().stream().map(p -> modelMapper.map(p, ProfessionalResponseDTO.class)).toList();
     }
+
 }

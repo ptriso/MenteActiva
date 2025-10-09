@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.VideoRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.VideoResponseDTO;
+import pe.edu.upc.menteactiva.entities.Videos;
 import pe.edu.upc.menteactiva.services.VideoService;
 
 import java.util.List;
@@ -23,7 +24,6 @@ public class VideoController {
     public ResponseEntity<VideoResponseDTO> create(@Valid @RequestBody VideoRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(videoService.create(dto));
     }
-
     @GetMapping("/listartodos")
     public List<VideoResponseDTO> listAll() {
         return videoService.listAll();
@@ -36,5 +36,13 @@ public class VideoController {
     public ResponseEntity<VideoResponseDTO> delete(@PathVariable Long id) {
         videoService.delete(id);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/{professionalId}/top-largos")
+    public List<Videos> top5MasLargos(@PathVariable Long professionalId) {
+        return videoService.top5MasLargosPorProfesional(professionalId);
+    }
+    @GetMapping("/{professionalId}/count")
+    public long contarPorProfesional(@PathVariable Long professionalId) {
+        return videoService.contarPorProfesional(professionalId);
     }
 }
