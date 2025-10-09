@@ -13,4 +13,6 @@ public interface VideoRepository extends JpaRepository<Videos, Long> {
     //¿Cuántos videos tiene un profesional? (KPI simple)
     long countByProfesional_Id(Long professionalId);
 
+    // Búsqueda por texto en título (search bar)
+    List<Videos> findByTitleContainingIgnoreCase(String titlePart);
 }
