@@ -1,10 +1,9 @@
 package pe.edu.upc.menteactiva.services;
 
 import pe.edu.upc.menteactiva.dtos.request.UserRequestDTO;
-import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_UserClientDTO;
-import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_UserProfessionalDTO;
+import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_UserClientDTO;
+import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_UserProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.UserResponseDTO;
-import pe.edu.upc.menteactiva.entities.User;
 
 import java.util.List;
 

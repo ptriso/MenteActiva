@@ -1,4 +1,4 @@
-package pe.edu.upc.menteactiva.dtos.responses;
+package pe.edu.upc.menteactiva.dtos.querys;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

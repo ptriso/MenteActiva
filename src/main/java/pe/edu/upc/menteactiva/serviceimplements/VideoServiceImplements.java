@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.VideoRequestDTO;
-import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_MostViewedVideosDTO;
+import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_MostViewedVideosDTO;
 import pe.edu.upc.menteactiva.dtos.responses.VideoResponseDTO;
 import pe.edu.upc.menteactiva.entities.Profesionals;
 import pe.edu.upc.menteactiva.entities.Videos;

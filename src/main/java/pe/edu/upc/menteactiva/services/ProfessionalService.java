@@ -1,9 +1,8 @@
 package pe.edu.upc.menteactiva.services;
 
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
-import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_TotalCitasPorProfesionalDTO;
+import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_TotalCitasPorProfesionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
-import pe.edu.upc.menteactiva.enums.Specialization;
 
 import java.util.List;
 

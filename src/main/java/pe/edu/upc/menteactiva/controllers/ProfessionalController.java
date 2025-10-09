@@ -6,9 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
-import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_TotalCitasPorProfesionalDTO;
+import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_TotalCitasPorProfesionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
-import pe.edu.upc.menteactiva.enums.Specialization;
 import pe.edu.upc.menteactiva.services.ProfessionalService;
 
 import java.util.List;
