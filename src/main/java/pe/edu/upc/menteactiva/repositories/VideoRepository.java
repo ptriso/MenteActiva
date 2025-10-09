@@ -23,4 +23,12 @@ public interface VideoRepository extends JpaRepository<Videos, Long> {
       """,
             nativeQuery = true)
     List<Object[]> getMostViewedVideos();
+    //Top 5 más largos de un profesional
+    List<Videos> findTop5ByProfesional_IdOrderByDurationDesc(Long professionalId);
+
+    //¿Cuántos videos tiene un profesional? (KPI simple)
+    long countByProfesional_Id(Long professionalId);
+
+    // Búsqueda por texto en título (search bar)
+    List<Videos> findByTitleContainingIgnoreCase(String titlePart);
 }

@@ -62,4 +62,8 @@ public class ChatServiceImplements implements ChatService {
                 .map(c -> modelMapper.map(c, ChatResponseDTO.class))
                 .toList();
     }
+    @Override
+    public List<Chats> historialPorCliente(Long clientId) {
+        return chatsRepository.findByAppointment_Client_IdOrderByIdDesc(clientId);
+    }
 }

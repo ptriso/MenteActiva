@@ -9,6 +9,7 @@ import pe.edu.upc.menteactiva.dtos.request.VideoRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_MostViewedVideosDTO;
 import pe.edu.upc.menteactiva.dtos.responses.VideoResponseDTO;
 import pe.edu.upc.menteactiva.repositories.VideoRepository;
+import pe.edu.upc.menteactiva.entities.Videos;
 import pe.edu.upc.menteactiva.services.VideoService;
 
 import java.util.List;
@@ -25,7 +26,6 @@ public class VideoController {
     public ResponseEntity<VideoResponseDTO> create(@Valid @RequestBody VideoRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(videoService.create(dto));
     }
-
     @GetMapping("/listartodos")
     public List<VideoResponseDTO> listAll() {
         return videoService.listAll();
@@ -44,6 +44,17 @@ public class VideoController {
     @GetMapping("/VideosMasVistos")
     public ResponseEntity<List<NativeQuery_MostViewedVideosDTO>> getMostViewedVideosWithAuthor() {
         return ResponseEntity.ok(videoService.getMostViewedVideos());
+    @GetMapping("/{professionalId}/top-largos")
+    public List<Videos> top5MasLargos(@PathVariable Long professionalId) {
+        return videoService.top5MasLargosPorProfesional(professionalId);
+    }
+    @GetMapping("/{professionalId}/count")
+    public long contarPorProfesional(@PathVariable Long professionalId) {
+        return videoService.contarPorProfesional(professionalId);
+    }
+    @GetMapping("/search")
+    public List<Videos> search(@RequestParam String q) {
+        return videoService.buscarPorTitulo(q);
     }
 
 }

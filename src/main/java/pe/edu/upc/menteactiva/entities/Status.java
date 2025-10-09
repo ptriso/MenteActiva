@@ -3,6 +3,7 @@ package pe.edu.upc.menteactiva.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import pe.edu.upc.menteactiva.enums.StatusAp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,9 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name",length = 50, nullable = false)
-    private String name;
+    @Column(name = "status_ap", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusAp statusap;
 
     @Column(name = "description",length = 150, nullable = false)
     private String description;

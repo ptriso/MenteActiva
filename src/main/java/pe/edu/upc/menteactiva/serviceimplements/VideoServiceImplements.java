@@ -59,8 +59,10 @@ public class VideoServiceImplements  implements VideoService {
         v.setUrl(dto.getUrl());
         v.setDuration(dto.getDuration());
 
-        VideoResponseDTO out = modelMapper.map(v, VideoResponseDTO.class);
-        out.setProfessionalId(v.getProfesional().getId());
+        Videos saved = videoRepository.save(v);
+
+        VideoResponseDTO out = modelMapper.map(saved, VideoResponseDTO.class);
+        out.setProfessionalId(saved.getProfesional().getId());
         return out;
     }
     @Override
@@ -99,4 +101,17 @@ public class VideoServiceImplements  implements VideoService {
     }
 
 
+    @Override
+    public List<Videos> top5MasLargosPorProfesional(Long professionalId) {
+        return videoRepository.findTop5ByProfesional_IdOrderByDurationDesc(professionalId);
+    }
+
+    @Override
+    public long contarPorProfesional(Long professionalId) {
+        return videoRepository.countByProfesional_Id(professionalId);
+    }
+    @Override
+    public List<Videos> buscarPorTitulo(String q) {
+        return videoRepository.findByTitleContainingIgnoreCase(q);
+    }
 }

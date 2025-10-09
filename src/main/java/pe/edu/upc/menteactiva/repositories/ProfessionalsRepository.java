@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upc.menteactiva.entities.Profesionals;
+import pe.edu.upc.menteactiva.enums.Specialization;
+
+import java.util.List;
 
 import java.util.List;
 
@@ -29,4 +32,5 @@ public interface ProfessionalsRepository extends JpaRepository<Profesionals, Lon
         """,
             nativeQuery = true)
     List<Object[]> countAppointmentsByProfessional();
+
 }
