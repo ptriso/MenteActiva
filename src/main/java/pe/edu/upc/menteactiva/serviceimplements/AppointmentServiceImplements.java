@@ -4,7 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import pe.edu.upc.menteactiva.dtos.querys.TopClientesResponseDTO;
+import pe.edu.upc.menteactiva.dtos.querys.TopEspecialidadResponseDTO;
+import pe.edu.upc.menteactiva.dtos.querys.TopProfesionalResponseDTO;
 import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
 import pe.edu.upc.menteactiva.entities.Appointments;
@@ -17,7 +21,10 @@ import pe.edu.upc.menteactiva.repositories.SchedulesRepository;
 import pe.edu.upc.menteactiva.repositories.StatusRepository;
 import pe.edu.upc.menteactiva.services.AppointmentService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppointmentServiceImplements implements AppointmentService {
@@ -43,7 +50,7 @@ public class AppointmentServiceImplements implements AppointmentService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
 
         Status status = statusRepository.findById(dto.getStatusId())
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
 
         Schedules schedule = schedulesRepository.findById(dto.getScheduleId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado"));
@@ -55,6 +62,7 @@ public class AppointmentServiceImplements implements AppointmentService {
 
         return modelMapper.map(appointmentsRepository.save(appointment), AppointmentResponseDTO.class);
     }
+
     @Override
     public AppointmentResponseDTO update(Long id, AppointmentRequestDTO dto) {
         Appointments appointment = appointmentsRepository.findById(id)
@@ -90,4 +98,33 @@ public class AppointmentServiceImplements implements AppointmentService {
                 .map(a -> modelMapper.map(a, AppointmentResponseDTO.class))
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<AppointmentResponseDTO> proximaCitaDeCliente(Long clientId) {
+        Optional<Appointments> opt = appointmentsRepository.findNextByClient(
+                clientId, LocalDate.now(), LocalTime.now()
+        );
+        return opt.map(a -> modelMapper.map(a, AppointmentResponseDTO.class));
+    }
+
+    @Override
+    public List<TopProfesionalResponseDTO> topProfesionalesMasCitas(int top) {
+        return appointmentsRepository.topProfesionalesTodas(
+                org.springframework.data.domain.PageRequest.of(0, top)
+        );
+    }
+    @Override
+    public List<TopEspecialidadResponseDTO> topEspecialidades(int top) {
+        return appointmentsRepository.topEspecialidades(
+                org.springframework.data.domain.PageRequest.of(0, top)
+        );
+    }
+    @Override
+    public List<TopClientesResponseDTO> topClientesMasCitasTodas(int top) {
+        return appointmentsRepository.topClientesTodas(
+                org.springframework.data.domain.PageRequest.of(0, top)
+        );
+    }
 }
+

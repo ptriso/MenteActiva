@@ -25,7 +25,7 @@ public class StatusServiceImplements implements StatusService {
     @Override
     public StatusResponseDTO create(StatusRequestDTO dto) {
         Status status = new Status();
-        status.setName(dto.getName());
+        status.setStatusap(dto.getStatusap());
         status.setDescription(dto.getDescription());
 
         return modelMapper.map(statusRepository.save(status), StatusResponseDTO.class);
@@ -36,7 +36,7 @@ public class StatusServiceImplements implements StatusService {
         Status status = statusRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
 
-        status.setName(dto.getName());
+        status.setStatusap(dto.getStatusap());
         status.setDescription(dto.getDescription());
 
         return modelMapper.map(statusRepository.save(status), StatusResponseDTO.class);
