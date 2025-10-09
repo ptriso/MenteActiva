@@ -17,7 +17,7 @@ public class Video_Progress {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private Clients client;
 
@@ -30,7 +30,7 @@ public class Video_Progress {
     @Column(name = "percentage", nullable = false)
     private Long percentage;
 
-    @Column(name = "current_times", nullable = false)
+    @Column(name = "current_time", nullable = false)
     private Integer current_time;
 
     @Column(name = "completed", nullable = false)
@@ -38,6 +38,5 @@ public class Video_Progress {
 
     @Column(name = "views_count", nullable = false)
     private Integer views_count;
-
 
 }

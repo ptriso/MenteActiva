@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pe.edu.upc.menteactiva.dtos.request.UserRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_UserClientDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_UserProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.UserResponseDTO;
 import pe.edu.upc.menteactiva.entities.User;
 import pe.edu.upc.menteactiva.repositories.UserRepository;
@@ -70,5 +72,33 @@ public class UserServiceImplements implements UserService {
 
             return dto;
         }).toList();
+    }
+
+    @Override
+    public List<NativeQuery_UserProfessionalDTO> getUsersWhoAreProfessionals() {
+        return userRepository.getUsersWhoAreProfessionals()
+                .stream()
+                .map(obj -> new NativeQuery_UserProfessionalDTO(
+                        ((Number) obj[0]).longValue(), // idUsuario
+                        (String) obj[1],               // username
+                        (String) obj[2],               // nombre
+                        (String) obj[3],               // apellido
+                        (String) obj[4]                // especialización
+                ))
+                .toList();
+    }
+
+    @Override
+    public List<NativeQuery_UserClientDTO> getUsersWhoAreClients() {
+        return userRepository.getUsersWhoAreClients()
+                .stream()
+                .map(obj -> new NativeQuery_UserClientDTO(
+                        ((Number) obj[0]).longValue(), // idUsuario
+                        (String) obj[1],               // username
+                        (String) obj[2],               // nombre
+                        (String) obj[3],               // apellido
+                        (String) obj[4]                // correo
+                ))
+                .toList();
     }
 }

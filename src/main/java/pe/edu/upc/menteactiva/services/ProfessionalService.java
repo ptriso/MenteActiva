@@ -1,6 +1,7 @@
 package pe.edu.upc.menteactiva.services;
 
 import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.NativeQuery_TotalCitasPorProfesionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
 
 import java.util.List;
@@ -11,4 +12,7 @@ public interface ProfessionalService {
     ProfessionalResponseDTO update(Long id, ProfessionalRequestDTO dto);
     void delete(Long id);
     List<ProfessionalResponseDTO> listAll();
+
+    List<NativeQuery_TotalCitasPorProfesionalDTO> countAppointmentsByProfessional();
+
 }
