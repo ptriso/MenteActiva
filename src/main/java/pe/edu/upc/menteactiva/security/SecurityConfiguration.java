@@ -137,6 +137,7 @@ public class SecurityConfiguration {
 
 
 
+
                 // 🔐 Cualquier otra petición requiere autenticación
                 .anyRequest().authenticated()
         );
