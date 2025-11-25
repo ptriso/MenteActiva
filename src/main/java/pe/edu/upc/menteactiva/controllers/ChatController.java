@@ -41,4 +41,9 @@ public class ChatController {
     public List<Chats> historialPorCliente(@PathVariable Long clientId) {
         return chatService.historialPorCliente(clientId);
     }
+    @GetMapping("/historial/cliente/{clientId}")
+    public ResponseEntity<List<Chats>> getHistorialPorCliente(@PathVariable Long clientId) {
+        List<Chats> historial = chatService.historialPorCliente(clientId);
+        return ResponseEntity.ok(historial);
+    }
 }

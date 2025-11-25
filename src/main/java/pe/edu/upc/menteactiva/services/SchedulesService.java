@@ -11,4 +11,5 @@ public interface SchedulesService {
     SchedulesResponseDTO update(Long id, SchedulesRequestDTO dto);
     void delete(Long id);
     List<SchedulesResponseDTO> listAll();
+    List<SchedulesResponseDTO> getSchedulesByProfessionalId(Long profesionalId);
 }

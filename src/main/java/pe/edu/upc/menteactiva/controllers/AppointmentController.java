@@ -9,6 +9,7 @@ import pe.edu.upc.menteactiva.dtos.querys.TopClientesResponseDTO;
 import pe.edu.upc.menteactiva.dtos.querys.TopEspecialidadResponseDTO;
 import pe.edu.upc.menteactiva.dtos.querys.TopProfesionalResponseDTO;
 import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
 import pe.edu.upc.menteactiva.services.AppointmentService;
 
@@ -59,5 +60,14 @@ public class AppointmentController {
     public List<TopClientesResponseDTO> topClientesTodas(
             @RequestParam(defaultValue = "5") int top) {
         return appointmentService.topClientesMasCitasTodas(top);
+    }
+    @GetMapping("/cliente/{clientId}")
+    public ResponseEntity<List<AppointmentClientResponseDTO>> listByClientId(@PathVariable Long clientId) {
+        return ResponseEntity.ok(appointmentService.listByClientId(clientId));
+    }
+    @PutMapping("/cancelar/{id}")
+    public ResponseEntity<Void> cancel(@PathVariable Long id) {
+        appointmentService.cancel(id);
+        return ResponseEntity.ok().build();
     }
 }

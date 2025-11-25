@@ -11,6 +11,7 @@ import pe.edu.upc.menteactiva.entities.Schedules;
 import pe.edu.upc.menteactiva.repositories.ProfessionalsRepository;
 import pe.edu.upc.menteactiva.repositories.SchedulesRepository;
 import pe.edu.upc.menteactiva.services.SchedulesService;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -76,5 +77,12 @@ public class SchedulesServiceImplements implements SchedulesService {
             dto.setProfesionalId((s.getProfesional() != null) ? s.getProfesional().getId() : null);
             return dto;
         }).toList();
+    }
+    @Override
+    public List<SchedulesResponseDTO> getSchedulesByProfessionalId(Long profesionalId) {
+        List<Schedules> schedules = schedulesRepository.findByProfesional_Id(profesionalId);
+        return schedules.stream()
+                .map(s -> modelMapper.map(s, SchedulesResponseDTO.class))
+                .collect(Collectors.toList());
     }
 }

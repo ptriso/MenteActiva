@@ -17,6 +17,7 @@ import pe.edu.upc.menteactiva.repositories.Video_ProgressRepository;
 import pe.edu.upc.menteactiva.services.Video_ProgressService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class Video_ProgressServiceImplements implements Video_ProgressService {
@@ -101,11 +102,23 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
         return video_progressRepository.findAll()
                 .stream()
                 .map(vp -> {
+                    // 1. Mapeo básico (IDs, porcentaje, etc.)
                     Video_ProgressResponseDTO dto = modelMapper.map(vp, Video_ProgressResponseDTO.class);
-                    dto.setClientId(vp.getClient() != null ? vp.getClient().getId() : null);
-                    dto.setVideoId(vp.getVideo()  != null ? vp.getVideo().getId()  : null);
+
+                    // 2. ¡AQUÍ JALAMOS LOS NOMBRES!
+                    if (vp.getVideo() != null) {
+                        dto.setVideoTitle(vp.getVideo().getTitle());
+                        dto.setDuration(String.valueOf(vp.getVideo().getDuration()) + " min");
+
+                        // Jalar nombre del profesional
+                        if (vp.getVideo().getProfesional() != null) {
+                            String nombreCompleto = vp.getVideo().getProfesional().getName() + " " +
+                                    vp.getVideo().getProfesional().getLastname();
+                            dto.setProfessionalName(nombreCompleto);
+                        }
+                    }
                     return dto;
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 }

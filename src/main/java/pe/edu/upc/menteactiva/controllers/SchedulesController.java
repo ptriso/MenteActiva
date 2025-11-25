@@ -39,5 +39,9 @@ public class SchedulesController {
         schedulesService.delete(id);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/profesional/{profesionalId}")
+    public ResponseEntity<List<SchedulesResponseDTO>> getSchedulesByProfId(@PathVariable Long profesionalId) {
+        return ResponseEntity.ok(schedulesService.getSchedulesByProfessionalId(profesionalId));
+    }
 
 }

@@ -16,4 +16,7 @@ public class Video_ProgressResponseDTO {
     private Integer current_time;
     private Boolean completed;
     private Integer views_count;
+    private String videoTitle;
+    private String professionalName;
+    private String duration;
 }
