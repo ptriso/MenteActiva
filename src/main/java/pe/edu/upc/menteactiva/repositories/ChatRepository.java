@@ -10,4 +10,6 @@ public interface ChatRepository extends JpaRepository<Chats, Long> {
 
     // Historial de chats de un cliente (vía appointment → client), más recientes primero
     List<Chats> findByAppointment_Client_IdOrderByIdDesc(Long clientId);
+
+    List<Chats> findByAppointment_Id(Long appointmentId);
 }

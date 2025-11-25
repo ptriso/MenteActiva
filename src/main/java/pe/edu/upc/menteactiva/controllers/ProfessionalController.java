@@ -44,4 +44,8 @@ public class ProfessionalController {
     public ResponseEntity<List<NativeQuery_TotalCitasPorProfesionalDTO>> countAppointmentsByProfessional() {
         return ResponseEntity.ok(professionalService.countAppointmentsByProfessional());
     }
+    @GetMapping("/listar/{id}")
+    public ProfessionalResponseDTO getById(@PathVariable Long id) {
+        return professionalService.listId(id);
+    }
 }

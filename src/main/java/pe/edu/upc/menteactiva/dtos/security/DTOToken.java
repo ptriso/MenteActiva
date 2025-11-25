@@ -14,4 +14,5 @@ public class DTOToken {
     private Long id;
     private String username;
     private String authorities; // Formato: "ROLE_USER;ROLE_ADMIN"
+    private Long profileId;
 }

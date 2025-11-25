@@ -10,11 +10,13 @@ import pe.edu.upc.menteactiva.dtos.querys.TopClientesResponseDTO;
 import pe.edu.upc.menteactiva.dtos.querys.TopEspecialidadResponseDTO;
 import pe.edu.upc.menteactiva.dtos.querys.TopProfesionalResponseDTO;
 import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
 import pe.edu.upc.menteactiva.entities.Appointments;
 import pe.edu.upc.menteactiva.entities.Clients;
 import pe.edu.upc.menteactiva.entities.Schedules;
 import pe.edu.upc.menteactiva.entities.Status;
+import pe.edu.upc.menteactiva.enums.StatusAp;
 import pe.edu.upc.menteactiva.repositories.AppointmentRepository;
 import pe.edu.upc.menteactiva.repositories.ClientRepository;
 import pe.edu.upc.menteactiva.repositories.SchedulesRepository;
@@ -45,22 +47,43 @@ public class AppointmentServiceImplements implements AppointmentService {
     private ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public AppointmentResponseDTO create(AppointmentRequestDTO dto) {
-        Clients client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
 
-        Status status = statusRepository.findById(dto.getStatusId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
+        Long scheduleId = dto.getScheduleId();
+
+        Long ID_CANCELADA = 4L;
+
+        if (appointmentsRepository.existsNonCancelledBySchedule(dto.getScheduleId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "El horario seleccionado ya fue reservado por otro usuario."
+            );
+        }
+
+        // 2) Buscar entidades relacionadas
+        Clients client = clientRepository.findById(dto.getClientId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Cliente no encontrado"));
 
         Schedules schedule = schedulesRepository.findById(dto.getScheduleId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Horario no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Horario no encontrado"));
 
+        Status status = statusRepository.findById(dto.getStatusId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Estado no encontrado"));
+
+        // 3) Crear y guardar la cita
         Appointments appointment = new Appointments();
         appointment.setClient(client);
-        appointment.setStatus(status);
         appointment.setSchedule(schedule);
+        appointment.setStatus(status);
 
-        return modelMapper.map(appointmentsRepository.save(appointment), AppointmentResponseDTO.class);
+        Appointments saved = appointmentsRepository.save(appointment);
+
+        // 4) Devolver DTO
+        return modelMapper.map(saved, AppointmentResponseDTO.class);
     }
 
     @Override
@@ -126,5 +149,23 @@ public class AppointmentServiceImplements implements AppointmentService {
                 org.springframework.data.domain.PageRequest.of(0, top)
         );
     }
+
+    @Override
+    public List<AppointmentClientResponseDTO> listByClientId(Long clientId) {
+        return appointmentsRepository.findAppointmentsByClientIdDTO(clientId);
+    }
+
+    @Override
+    @Transactional
+    public void cancel(Long id) {
+        Appointments appt = appointmentsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        Status statusCancelada = statusRepository.findById(4L)
+                .orElseThrow(() -> new RuntimeException("Estado CANCELADA no existe"));
+        appt.setStatus(statusCancelada);
+        appointmentsRepository.save(appt);
+    }
+
 }
 

@@ -1,4 +1,20 @@
 
+# 🧠 MenteActiva Web Service API
+[![Java](https://img.shields.io/badge/Java-17-007396?logo=openjdk)]()  
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-6DB33F?logo=springboot)]()  
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql)]()  
+[![Security](https://img.shields.io/badge/Security-JWT_Auth-000?logo=jsonwebtokens)]()  
+[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
+[![License](https://img.shields.io/badge/License-MIT-yellow)]()
+
+---
+
+# 🧠✨ MenteActiva — Plataforma de Apoyo Emocional Juvenil
+Un backend moderno, seguro y escalable para la plataforma AcompañaT.
+
+---
+
+# 🎨 Banner
 
 ```
   __  __            _            _        _   _            
@@ -100,3 +116,4 @@ MIT License.
 ## 🌍 English Version
 
 MenteActiva API backend for the mental-health platform AcompañaT.
+

@@ -12,6 +12,7 @@ public interface ProfessionalService {
     ProfessionalResponseDTO update(Long id, ProfessionalRequestDTO dto);
     void delete(Long id);
     List<ProfessionalResponseDTO> listAll();
+    ProfessionalResponseDTO listId(Long id);
 
     List<NativeQuery_TotalCitasPorProfesionalDTO> countAppointmentsByProfessional();
 

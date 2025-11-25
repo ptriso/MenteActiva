@@ -1,8 +1,27 @@
+-- ==========================================
+-- CREAR AUTHORITIES PRIMERO
+-- ==========================================
+INSERT INTO authorities (name)
+SELECT 'ROLE_USER'
+    WHERE NOT EXISTS (SELECT 1 FROM authorities WHERE name = 'ROLE_USER');
+
+INSERT INTO authorities (name)
+SELECT 'ROLE_CLIENT'
+    WHERE NOT EXISTS (SELECT 1 FROM authorities WHERE name = 'ROLE_CLIENT');
+
+INSERT INTO authorities (name)
+SELECT 'ROLE_PROFESSIONAL'
+    WHERE NOT EXISTS (SELECT 1 FROM authorities WHERE name = 'ROLE_PROFESSIONAL');
+
+INSERT INTO authorities (name)
+SELECT 'ROLE_ADMIN'
+    WHERE NOT EXISTS (SELECT 1 FROM authorities WHERE name = 'ROLE_ADMIN');
+
 -- ============================
 -- USERS pro1..pro5 (idempotente)
 -- ============================
 INSERT INTO users (username, password, enabled)
-SELECT 'pro1', '$2a$12$nMb1.ADGq9I6bibMjs7bZeP7klakLKZHhnKnjg4vFBzeSkUTR3Bu6', true
+SELECT 'pro1', '$2a$12$n30HYM0OyhyBvdEEq6SOIeSSKm1KTPY9QCalOwmuwzCFwqd3HHurC', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro1');
 
 INSERT INTO users (username, password, enabled)
@@ -22,7 +41,7 @@ SELECT 'pro5', '$2a$12$6wPvJL37ZhxGKD9C7x52KeB00CrPjItzSvUv9xlFzNBVQ9eTl4od.', t
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro5');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'cli1', '$2a$12$VcxB/kMDVG6siJMfotH4qO32gkvBy4g1ml5HG9ZNfImwRITZLAXs6', true
+SELECT 'cli1', '$2a$12$n30HYM0OyhyBvdEEq6SOIeSSKm1KTPY9QCalOwmuwzCFwqd3HHurC', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli1');
 
 INSERT INTO users (username, password, enabled)
@@ -41,6 +60,83 @@ INSERT INTO users (username, password, enabled)
 SELECT 'cli5', '$2a$12$4NeIq6/JPj2fVl6hrxND3ezfysytgoBCJjZDA.E8FIE//BnucXT4i', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli5');
 
+-- ============================================
+-- CLIENTS (name, lastname, mail, phone, user_id)
+-- ============================================
+-- cli1 -> Ana Torres
+INSERT INTO clients (name, lastname, mail, phone, user_id)
+SELECT 'Ana', 'Torres', 'ana.torres@demo.com', '910000001', u.id
+FROM users u
+WHERE u.username = 'cli1'
+  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
+
+-- cli2 -> Bruno Díaz
+INSERT INTO clients (name, lastname, mail, phone, user_id)
+SELECT 'Bruno', 'Diaz', 'bruno.diaz@demo.com', '910000002', u.id
+FROM users u
+WHERE u.username = 'cli2'
+  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
+
+-- cli3 -> Carla Núñez
+INSERT INTO clients (name, lastname, mail, phone, user_id)
+SELECT 'Carla', 'Nunez', 'carla.nunez@demo.com', '910000003', u.id
+FROM users u
+WHERE u.username = 'cli3'
+  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
+
+-- cli4 -> Daniel Soto
+INSERT INTO clients (name, lastname, mail, phone, user_id)
+SELECT 'Daniel', 'Soto', 'daniel.soto@demo.com', '910000004', u.id
+FROM users u
+WHERE u.username = 'cli4'
+  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
+
+-- cli5 -> Elena Ruiz
+INSERT INTO clients (name, lastname, mail, phone, user_id)
+SELECT 'Elena', 'Ruiz', 'elena.ruiz@demo.com', '910000005', u.id
+FROM users u
+WHERE u.username = 'cli5'
+  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
+
+
+
+-- ==========================================
+-- PROFESIONALS (usa enum válido: Psiquiatra | Psicologo | Neurologo)
+-- ==========================================
+-- pro1 -> Psiquiatra
+INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
+SELECT 'Laura', 'Salazar', 'Psiquiatra', 'laura@demo.com', '900000001', u.id
+FROM users u
+WHERE u.username = 'pro1'
+  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
+
+-- pro2 -> Psicologo
+INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
+SELECT 'Diego', 'Vega', 'Psicologo', 'diego@demo.com', '900000002', u.id
+FROM users u
+WHERE u.username = 'pro2'
+  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
+
+-- pro3 -> Neurologo
+INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
+SELECT 'Camila', 'Rios', 'Neurologo', 'camila@demo.com', '900000003', u.id
+FROM users u
+WHERE u.username = 'pro3'
+  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
+
+-- pro4 -> Psiquiatra
+INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
+SELECT 'Javier', 'Paredes', 'Psiquiatra', 'javier@demo.com', '900000004', u.id
+FROM users u
+WHERE u.username = 'pro4'
+  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
+
+-- pro5 -> Psicologo
+INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
+SELECT 'Rocio', 'Mendoza', 'Psicologo', 'rocio@demo.com', '900000005', u.id
+FROM users u
+WHERE u.username = 'pro5'
+  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
 
 -- ==========================================
 -- USERS_AUTHORITIES -> ROLE_PROFESSIONAL
@@ -101,44 +197,6 @@ WHERE u.username = 'pro5'
     WHERE ua.user_id = u.id AND ua.authority_id = a.id
 );
 
--- ==========================================
--- PROFESIONALS (usa enum válido: Psiquiatra | Psicologo | Neurologo)
--- ==========================================
--- pro1 -> Psiquiatra
-INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
-SELECT 'Laura', 'Salazar', 'Psiquiatra', 'laura@demo.com', '900000001', u.id
-FROM users u
-WHERE u.username = 'pro1'
-  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
-
--- pro2 -> Psicologo
-INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
-SELECT 'Diego', 'Vega', 'Psicologo', 'diego@demo.com', '900000002', u.id
-FROM users u
-WHERE u.username = 'pro2'
-  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
-
--- pro3 -> Neurologo
-INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
-SELECT 'Camila', 'Rios', 'Neurologo', 'camila@demo.com', '900000003', u.id
-FROM users u
-WHERE u.username = 'pro3'
-  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
-
--- pro4 -> Psiquiatra
-INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
-SELECT 'Javier', 'Paredes', 'Psiquiatra', 'javier@demo.com', '900000004', u.id
-FROM users u
-WHERE u.username = 'pro4'
-  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
-
--- pro5 -> Psicologo
-INSERT INTO profesionals (name, lastname, specialization, mail, phone, user_id)
-SELECT 'Rocio', 'Mendoza', 'Psicologo', 'rocio@demo.com', '900000005', u.id
-FROM users u
-WHERE u.username = 'pro5'
-  AND NOT EXISTS (SELECT 1 FROM profesionals p WHERE p.user_id = u.id);
-
 -- ============================================
 -- USERS_AUTHORITIES -> ROLE_CLIENT (sin insertar authorities)
 -- ============================================
@@ -196,44 +254,6 @@ WHERE u.username = 'cli5'
     SELECT 1 FROM users_authorities ua
     WHERE ua.user_id = u.id AND ua.authority_id = a.id
 );
-
--- ============================================
--- CLIENTS (name, lastname, mail, phone, user_id)
--- ============================================
--- cli1 -> Ana Torres
-INSERT INTO clients (name, lastname, mail, phone, user_id)
-SELECT 'Ana', 'Torres', 'ana.torres@demo.com', '910000001', u.id
-FROM users u
-WHERE u.username = 'cli1'
-  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
-
--- cli2 -> Bruno Díaz
-INSERT INTO clients (name, lastname, mail, phone, user_id)
-SELECT 'Bruno', 'Diaz', 'bruno.diaz@demo.com', '910000002', u.id
-FROM users u
-WHERE u.username = 'cli2'
-  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
-
--- cli3 -> Carla Núñez
-INSERT INTO clients (name, lastname, mail, phone, user_id)
-SELECT 'Carla', 'Nunez', 'carla.nunez@demo.com', '910000003', u.id
-FROM users u
-WHERE u.username = 'cli3'
-  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
-
--- cli4 -> Daniel Soto
-INSERT INTO clients (name, lastname, mail, phone, user_id)
-SELECT 'Daniel', 'Soto', 'daniel.soto@demo.com', '910000004', u.id
-FROM users u
-WHERE u.username = 'cli4'
-  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
-
--- cli5 -> Elena Ruiz
-INSERT INTO clients (name, lastname, mail, phone, user_id)
-SELECT 'Elena', 'Ruiz', 'elena.ruiz@demo.com', '910000005', u.id
-FROM users u
-WHERE u.username = 'cli5'
-  AND NOT EXISTS (SELECT 1 FROM clients c WHERE c.user_id = u.id);
 
 -- ============================================================
 -- VIDEOS (relajación/meditación) por profesional (idempotente)
@@ -453,63 +473,80 @@ WHERE u.username = 'cli1'
 );
 
 -- ============================================================
--- SCHEDULES (date, time_start, time_ends, profesional_id)
--- Crea turnos por hora para pro1, pro2 y pro3 en CURRENT_DATE.
--- Evita duplicados por (profesional_id, date, time_start, time_ends).
+-- SCHEDULES (PREDEFINIDOS PARA VARIAS SEMANAS)
+-- (Crea horarios para la semana pasada, esta semana y las próximas 2)
 -- ============================================================
-
 WITH
-    base AS (
-        SELECT CURRENT_DATE::date AS dt
+    -- 1. Genera 4 semanas (desde -1 hasta +2)
+    week_offsets AS (
+        SELECT generate_series(-1, 2) AS week_offset
     ),
+    -- 2. Define el Lunes de cada una de esas semanas
+    week_starts AS (
+        SELECT date_trunc('week', CURRENT_DATE)::date + (wo.week_offset * 7) AS monday
+        FROM week_offsets wo
+    ),
+    -- 3. Trae los IDs de los 5 profesionales
     pros AS (
-        SELECT 'pro1' AS username, p.id AS profesional_id
-        FROM users u JOIN profesionals p ON p.user_id = u.id
-        WHERE u.username = 'pro1'
-        UNION ALL
-        SELECT 'pro2', p.id
-        FROM users u JOIN profesionals p ON p.user_id = u.id
-        WHERE u.username = 'pro2'
-        UNION ALL
-        SELECT 'pro3', p.id
-        FROM users u JOIN profesionals p ON p.user_id = u.id
-        WHERE u.username = 'pro3'
+        SELECT p.id, u.username
+        FROM profesionals p
+                 JOIN users u ON p.user_id = u.id
+        WHERE u.username IN ('pro1', 'pro2', 'pro3', 'pro4', 'pro5')
     ),
-    slots AS (
-        -- pro1: 13–14, 14–15, 15–16, 16–17
-        SELECT 'pro1' AS username, '13:00'::time AS t_start, '14:00'::time AS t_end UNION ALL
-        SELECT 'pro1', '14:00'::time, '15:00'::time UNION ALL
-        SELECT 'pro1', '15:00'::time, '16:00'::time UNION ALL
-        SELECT 'pro1', '16:00'::time, '17:00'::time UNION ALL
-        -- pro2: 09–10, 10–11, 11–12
-        SELECT 'pro2', '09:00'::time, '10:00'::time UNION ALL
-        SELECT 'pro2', '10:00'::time, '11:00'::time UNION ALL
-        SELECT 'pro2', '11:00'::time, '12:00'::time UNION ALL
-        -- pro3: 18–19, 19–20, 20–21
-        SELECT 'pro3', '18:00'::time, '19:00'::time UNION ALL
-        SELECT 'pro3', '19:00'::time, '20:00'::time UNION ALL
-        SELECT 'pro3', '20:00'::time, '21:00'::time
+    -- 4. Define la plantilla de horarios (Lunes a Viernes, 11:00 a 18:00)
+    template AS (
+        -- pro1: Lunes y Miércoles (Mañana) 11:00-13:00
+        SELECT 'pro1' AS username, 0 AS day_offset, '11:00:00'::time AS t_start, '12:00:00'::time AS t_end UNION ALL
+        SELECT 'pro1', 0, '12:00:00'::time, '13:00:00'::time UNION ALL
+        SELECT 'pro1', 2, '11:00:00'::time, '12:00:00'::time UNION ALL
+        SELECT 'pro1', 2, '12:00:00'::time, '13:00:00'::time UNION ALL
+
+        -- pro2: Lunes y Miércoles (Tarde) 14:00-18:00
+        SELECT 'pro2', 0, '14:00:00'::time, '15:00:00'::time UNION ALL
+        SELECT 'pro2', 0, '15:00:00'::time, '16:00:00'::time UNION ALL
+        SELECT 'pro2', 2, '16:00:00'::time, '17:00:00'::time UNION ALL
+        SELECT 'pro2', 2, '17:00:00'::time, '18:00:00'::time UNION ALL
+
+        -- pro3: Martes y Jueves (11:00-16:00 con descanso)
+        SELECT 'pro3', 1, '11:00:00'::time, '12:00:00'::time UNION ALL
+        SELECT 'pro3', 1, '12:00:00'::time, '13:00:00'::time UNION ALL
+        SELECT 'pro3', 1, '14:00:00'::time, '15:00:00'::time UNION ALL
+        SELECT 'pro3', 1, '15:00:00'::time, '16:00:00'::time UNION ALL
+        SELECT 'pro3', 3, '11:00:00'::time, '12:00:00'::time UNION ALL
+        SELECT 'pro3', 3, '12:00:00'::time, '13:00:00'::time UNION ALL
+
+        -- pro4: Viernes (Todo el día 11:00-16:00)
+        SELECT 'pro4', 4, '11:00:00'::time, '12:00:00'::time UNION ALL
+        SELECT 'pro4', 4, '12:00:00'::time, '13:00:00'::time UNION ALL
+        SELECT 'pro4', 4, '14:00:00'::time, '15:00:00'::time UNION ALL
+        SELECT 'pro4', 4, '15:00:00'::time, '16:00:00'::time UNION ALL
+
+        -- pro5: Martes y Jueves (Tarde 16:00-18:00)
+        SELECT 'pro5', 1, '16:00:00'::time, '17:00:00'::time UNION ALL
+        SELECT 'pro5', 1, '17:00:00'::time, '18:00:00'::time UNION ALL
+        SELECT 'pro5', 3, '16:00:00'::time, '17:00:00'::time UNION ALL
+        SELECT 'pro5', 3, '17:00:00'::time, '18:00:00'::time
     ),
+    -- 5. Combina todo para generar las filas a insertar
     to_insert AS (
         SELECT
-            b.dt               AS date,
-    s.t_start          AS time_start,
-    s.t_end            AS time_ends,
-    pr.profesional_id  AS profesional_id
-FROM base b
-    JOIN slots s ON TRUE
-    JOIN pros  pr ON pr.username = s.username
+            (w.monday + t.day_offset) AS date,
+    t.t_start                 AS time_start,
+    t.t_end                   AS time_ends,
+    p.id                      AS profesional_id
+FROM template t
+    JOIN week_starts w ON TRUE
+    JOIN profesionals p ON p.user_id = (SELECT id FROM users WHERE username = t.username)
     )
+-- 6. Inserta los datos
 INSERT INTO schedules (date, time_start, time_ends, profesional_id)
 SELECT i.date, i.time_start, i.time_ends, i.profesional_id
 FROM to_insert i
 WHERE NOT EXISTS (
-    SELECT 1
-    FROM schedules x
+    SELECT 1 FROM schedules x
     WHERE x.profesional_id = i.profesional_id
       AND x.date           = i.date
       AND x.time_start     = i.time_start
-      AND x.time_ends      = i.time_ends
 );
 
 -- ============================================
@@ -633,21 +670,6 @@ WHERE NOT EXISTS (
     SELECT 1 FROM appointments a WHERE a.schedules_id = pk.schedules_id
 );
 
--- ============================================================
--- CHATS: crea hasta 3 chats para appointments que aún no tienen
--- ============================================================
-WITH appts AS (
-    SELECT a.id AS appointment_id
-    FROM appointments a
-             LEFT JOIN chats ch ON ch.appointment_id = a.id
-    WHERE ch.appointment_id IS NULL
-    ORDER BY a.id
-    LIMIT 3
-    )
-INSERT INTO chats (appointment_id)
-SELECT appointment_id
-FROM appts;
-
 -- ==================================================================
 -- SESSION_SUMMARIES: crea hasta 3 para appointments sin session aún
 -- (task, progress y conclusion son NOT NULL, así que los llenamos)
@@ -684,3 +706,53 @@ SELECT
         ELSE 'Seguimiento pendiente'
         END AS conclusion
 FROM pick;
+
+-- ==========================================
+-- DATOS DE EJEMPLO PARA CITAS PASADAS
+-- ==========================================
+
+-- 1. Un horario (Schedule) en el pasado (del pro1)
+INSERT INTO schedules (date, time_start, time_ends, profesional_id)
+SELECT '2025-10-20', '10:00:00', '11:00:00', p.id
+FROM profesionals p WHERE p.user_id = (SELECT id FROM users WHERE username = 'pro1')
+    ON CONFLICT DO NOTHING;
+
+-- 2. Un estado "Completada" (Asumiendo ID=3, basado en tu Enum 'StatusAp')
+INSERT INTO status (id, status_ap, description)
+SELECT 3, 'COMPLETADA', 'La cita fue completada'
+    WHERE NOT EXISTS (SELECT 1 FROM status WHERE id = 3);
+
+-- 3. La Cita (Appointment) que conecta al cli1 con el schedule
+INSERT INTO appointments (client_id, status_id, schedules_id) -- (Columna 'schedules_id' corregida)
+SELECT
+    (SELECT c.id FROM clients c WHERE c.user_id = (SELECT id FROM users WHERE username = 'cli1')),
+    3, -- ID de "COMPLETADA"
+    (SELECT s.id FROM schedules s WHERE s.date = '2025-10-20' AND s.time_start = '10:00:00')
+    ON CONFLICT DO NOTHING;
+
+-- 4. El Resumen (Session_Summary) de esa cita
+INSERT INTO session_summaries (task, progress, conclusion, appointment_id)
+SELECT
+    'Revisión de técnicas de respiración.',
+    'El cliente muestra mejora en el control de la ansiedad.',
+    'Continuar con la práctica diaria. Próxima sesión en 2 semanas.',
+    (SELECT a.id FROM appointments a WHERE a.schedules_id = (SELECT s.id FROM schedules s WHERE s.date = '2025-10-20')) -- (Columna 'schedules_id' corregida)
+    ON CONFLICT DO NOTHING;
+
+-- 5. Un Chat (Chats) asociado a esa cita
+-- (Columnas 'appointment_id', 'mensaje', 'sender_type', 'timestamp' corregidas)
+INSERT INTO chats (appointment_id, mensaje, sender_type, timestamp)
+SELECT
+    (SELECT a.id FROM appointments a WHERE a.schedules_id = (SELECT s.id FROM schedules s WHERE s.date = '2025-10-20')),
+    'Hola Dr. Listo para nuestra sesión de hoy.',
+    'CLIENTE',
+    '2025-10-20 09:55:00'
+    ON CONFLICT DO NOTHING;
+
+INSERT INTO chats (appointment_id, mensaje, sender_type, timestamp)
+SELECT
+    (SELECT a.id FROM appointments a WHERE a.schedules_id = (SELECT s.id FROM schedules s WHERE s.date = '2025-10-20')),
+    'Hola! Perfecto, te espero en la sala.',
+    'PROFESIONAL',
+    '2025-10-20 09:56:00'
+    ON CONFLICT DO NOTHING;

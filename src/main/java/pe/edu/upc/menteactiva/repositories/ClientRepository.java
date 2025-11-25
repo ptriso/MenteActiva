@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upc.menteactiva.entities.Clients;
 
+import java.util.Optional;
+
 public interface ClientRepository extends JpaRepository<Clients, Long> {
     boolean existsById(Long id);
     boolean existsByNameAndLastname(String lastname, String name);
@@ -14,5 +16,7 @@ public interface ClientRepository extends JpaRepository<Clients, Long> {
     @Transactional
     @Query(value = "DELETE FROM clients WHERE id = :id", nativeQuery = true)
     void deleteClientById(@Param("id") Long id);
+
+    Optional<Clients> findByUser_Id(Long userId);
 }
 

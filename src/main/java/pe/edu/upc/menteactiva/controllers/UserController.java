@@ -15,6 +15,8 @@ import pe.edu.upc.menteactiva.dtos.responses.UserResponseDTO;
 import pe.edu.upc.menteactiva.dtos.security.DTOToken;
 import pe.edu.upc.menteactiva.dtos.security.DTOUser;
 import pe.edu.upc.menteactiva.entities.User;
+import pe.edu.upc.menteactiva.repositories.ClientRepository;
+import pe.edu.upc.menteactiva.repositories.ProfessionalsRepository;
 import pe.edu.upc.menteactiva.security.JwtUtilService;
 import pe.edu.upc.menteactiva.security.UserSecurity;
 import pe.edu.upc.menteactiva.services.UserService;
@@ -42,36 +44,46 @@ public class UserController {
     @Autowired
     private JwtUtilService jwtUtilService;
 
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private ProfessionalsRepository professionalsRepository;
+
     // Endpoint de Login
     @PostMapping("/login")
     public ResponseEntity<DTOToken> login(@RequestBody DTOUser credentials) {
         try {
-            // Autenticar usuario
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            credentials.getUsername(),
-                            credentials.getPassword()
-                    )
+                    new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
             );
 
-            // Cargar detalles del usuario
             UserSecurity userSecurity = (UserSecurity) userDetailsService
                     .loadUserByUsername(credentials.getUsername());
 
-            // Generar token JWT
             String jwt = jwtUtilService.generateToken(userSecurity);
 
-            // Extraer información del usuario
-            Long id = userSecurity.getUser().getId();
-            String authorities = userSecurity.getUser().getUser_authority()
-                    .stream()
-                    .map(ua -> ua.getAuthority().getName())
+            // --- LÓGICA MODIFICADA ---
+            Long userId = userSecurity.getUser().getId();
+            String authorities = userSecurity.getAuthorities().stream()
+                    .map(auth -> auth.getAuthority())
                     .collect(Collectors.joining(";"));
 
-            DTOToken response = new DTOToken(jwt, id, userSecurity.getUsername(), authorities);
+            // --- NUEVA LÓGICA PARA BUSCAR EL ID DEL PERFIL ---
+            Long profileId = null;
+            if (authorities.contains("ROLE_CLIENT")) {
+                profileId = clientRepository.findByUser_Id(userId)
+                        .map(client -> client.getId())
+                        .orElse(null); // Devuelve el client_id
+            } else if (authorities.contains("ROLE_PROFESSIONAL")) {
+                profileId = professionalsRepository.findByUser_Id(userId)
+                        .map(prof -> prof.getId())
+                        .orElse(null); // Devuelve el professional_id
+            }
+
+            DTOToken response = new DTOToken(jwt, userId, userSecurity.getUsername(), authorities, profileId);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
-
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }

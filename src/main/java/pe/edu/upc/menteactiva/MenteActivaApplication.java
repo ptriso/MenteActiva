@@ -37,28 +37,6 @@ public class MenteActivaApplication {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            // Crear authorities si no existen
-            Authority roleUser = authorityRepository.findByName("ROLE_USER");
-            if (roleUser == null) {
-                roleUser = authorityRepository.save(new Authority(null, "ROLE_USER", null));
-            }
-
-            Authority roleAdmin = authorityRepository.findByName("ROLE_ADMIN");
-            if (roleAdmin == null) {
-                roleAdmin = authorityRepository.save(new Authority(null, "ROLE_ADMIN", null));
-            }
-
-            Authority roleClient = authorityRepository.findByName("ROLE_CLIENT");
-            if (roleClient == null) {
-                roleClient = authorityRepository.save(new Authority(null, "ROLE_CLIENT", null));
-            }
-
-            Authority roleProfessional = authorityRepository.findByName("ROLE_PROFESSIONAL");
-            if (roleProfessional == null) {
-                roleProfessional = authorityRepository.save(new Authority(null, "ROLE_PROFESSIONAL", null));
-            }
-
-            // Crear usuario admin si no existe
             User adminUser = userRepository.findByUsername("admin");
             if (adminUser == null) {
                 adminUser = new User();
@@ -67,13 +45,15 @@ public class MenteActivaApplication {
                 adminUser.setEnabled(true);
                 adminUser = userRepository.save(adminUser);
 
-                // Asignar rol ADMIN
-                User_Authority ua = new User_Authority();
-                ua.setUser(adminUser);
-                ua.setAuthority(roleAdmin);
-                userAuthorityRepository.save(ua);
-
-                System.out.println("✅ Usuario admin creado - username: admin, password: admin123");
+                // Asignar rol ADMIN (que import.sql ya creó)
+                Authority roleAdmin = authorityRepository.findByName("ROLE_ADMIN");
+                if (roleAdmin != null) {
+                    User_Authority ua = new User_Authority();
+                    ua.setUser(adminUser);
+                    ua.setAuthority(roleAdmin);
+                    userAuthorityRepository.save(ua);
+                    System.out.println("✅ Usuario admin creado - username: admin, password: admin123");
+                }
             }
         };
     }

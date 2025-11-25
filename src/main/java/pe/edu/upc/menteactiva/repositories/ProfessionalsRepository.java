@@ -11,6 +11,7 @@ import pe.edu.upc.menteactiva.enums.Specialization;
 import java.util.List;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfessionalsRepository extends JpaRepository<Profesionals, Long> {
     boolean existsById(Long id);
@@ -32,5 +33,7 @@ public interface ProfessionalsRepository extends JpaRepository<Profesionals, Lon
         """,
             nativeQuery = true)
     List<Object[]> countAppointmentsByProfessional();
+
+    Optional<Profesionals> findByUser_Id(Long userId);
 
 }

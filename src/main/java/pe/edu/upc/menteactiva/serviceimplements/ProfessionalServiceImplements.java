@@ -96,6 +96,14 @@ public class ProfessionalServiceImplements implements ProfessionalService {
                 ))
                 .toList();
     }
+    @Override
+    public ProfessionalResponseDTO listId(Long id) {
+
+        Profesionals profesional = professionalsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Profesional no encontrado con id: " + id));
+
+        return modelMapper.map(profesional, ProfessionalResponseDTO.class);
+    }
 
 
 }
