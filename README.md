@@ -116,3 +116,4 @@ MIT License.
 ## 🌍 English Version
 
 MenteActiva API backend for the mental-health platform AcompañaT.
+
