@@ -31,15 +31,29 @@ public class ClientServiceImplements implements ClientService {
     @Override
     public ClientResponseDTO create(ClientRequestDTO dto){
 
-        String name = dto.getName().trim();
-        String lastname = dto.getLastname().trim();
-        if(!userRepository.existsById(dto.getUserId()))
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        if (dto.getUserId() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "userId es obligatorio para registrar un cliente"
+            );
+        }
+
+
+        String name = dto.getName() != null ? dto.getName().trim() : null;
+        String lastname = dto.getLastname() != null ? dto.getLastname().trim() : null;
+        if (!userRepository.existsById(dto.getUserId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Usuario no encontrado con id: " + dto.getUserId()
+            );
         }
         if (clientRepository.existsByNameAndLastname(lastname, name)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un cliente con ese nombre y apellido");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Ya existe un cliente con ese nombre y apellido"
+            );
         }
+
         Clients c = modelMapper.map(dto, Clients.class);
         c.setId(null);
         c.setName(name);
@@ -83,5 +97,14 @@ public class ClientServiceImplements implements ClientService {
     @Override
     public List<ClientResponseDTO> listAll() {
         return clientRepository.findAll().stream().map( c -> modelMapper.map(c, ClientResponseDTO.class)).toList();
+    }
+    @Override
+    public ClientResponseDTO findById(Long id) {
+        Clients client = clientRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado")
+                );
+
+        return modelMapper.map(client, ClientResponseDTO.class);
     }
 }
