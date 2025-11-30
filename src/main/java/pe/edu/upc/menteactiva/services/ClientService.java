@@ -10,4 +10,6 @@ public interface ClientService {
     ClientResponseDTO update(Long id, ClientRequestDTO dto);
     void delete(Long id);
     List<ClientResponseDTO> listAll();
+    ClientResponseDTO findById(Long id);
+
 }

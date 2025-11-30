@@ -62,4 +62,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/upc/MenteActiva/User/login")
+                || path.startsWith("/upc/MenteActiva/User/register")
+                || path.startsWith("/upc/MenteActiva/Clients/registrar")
+                || path.startsWith("/upc/MenteActiva/Professionals/registrar");
+    }
 }

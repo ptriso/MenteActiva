@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImplements implements UserService {
+public
+class UserServiceImplements implements UserService {
 
     @Autowired
     UserRepository userRepository;
@@ -42,6 +43,7 @@ public class UserServiceImplements implements UserService {
     @Override
     public UserResponseDTO create (UserRequestDTO dto)
     {
+
         if(userRepository.existsByUsername(dto.getUsername()))
         {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"nombre ya existente");
@@ -214,6 +216,26 @@ public class UserServiceImplements implements UserService {
         }
 
         return savedUser;
+    }
+    @Override
+    public User findByEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Email is required"
+            );
+        }
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "User with Email: " + email + " not found"
+            );
+        }
+
+        return user;
     }
 }
 

@@ -26,5 +26,6 @@ public interface UserService {
     UserResponseDTO findByIdDTO(Long id);
     User addUser(DTOUser dtoUser);
     User addUser(User user);
+    User findByEmail(String email);
     // ... tus otros métodos
 }

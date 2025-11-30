@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
-
     @Query(
             value = """
             SELECT 
@@ -38,4 +37,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Object[]> getUsersWhoAreClients();
 
     User findByUsername(String username);
+
+    @Query("""
+        SELECT u
+        FROM User u
+        LEFT JOIN u.clients c
+        LEFT JOIN u.profesionals p
+        WHERE c.mail = :email OR p.mail = :email
+        """)
+    User findByEmail(String email);
 }
