@@ -13,6 +13,8 @@ import pe.edu.upc.menteactiva.entities.User_Authority;
 import pe.edu.upc.menteactiva.repositories.AuthorityRepository;
 import pe.edu.upc.menteactiva.repositories.UserRepository;
 import pe.edu.upc.menteactiva.repositories.User_AuthorityRepository;
+import pe.edu.upc.menteactiva.services.ClientService;
+import pe.edu.upc.menteactiva.services.ProfessionalService;
 import pe.edu.upc.menteactiva.services.User_AuthorityService;
 
 import java.util.List;
@@ -32,7 +34,14 @@ public class User_AuthorityServiceImplements implements User_AuthorityService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private ClientService clientService;
+
+    @Autowired
+    private ProfessionalService professionalService;
+
     public User_AuthorityResponseDTO create(User_AuthorityRequestDTO dto) {
+
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -41,6 +50,15 @@ public class User_AuthorityServiceImplements implements User_AuthorityService {
 
         if (user_AuthorityRepository.existsByUserIdAndAuthorityId(user.getId(), authority.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya tiene esta autoridad asignada");
+        }
+
+        // ✔ CREACIÓN AUTOMÁTICA DEL PERFIL
+        if (authority.getName().equals("ROLE_CLIENT")) {
+            clientService.createIfNotExists(user.getId());
+        }
+
+        if (authority.getName().equals("ROLE_PROFESSIONAL")) {
+            professionalService.createIfNotExists(user.getId());
         }
 
         User_Authority ua = new User_Authority();

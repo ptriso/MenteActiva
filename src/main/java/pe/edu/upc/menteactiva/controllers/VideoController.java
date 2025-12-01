@@ -56,4 +56,10 @@ public class VideoController {
     public List<Videos> search (@RequestParam String q){
         return videoService.buscarPorTitulo(q);
     }
+
+    @GetMapping({"/profesional/{id}"})
+    public ResponseEntity<List<VideoResponseDTO>> listByProfessional(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(this.videoService
+                .listByProfesional(id));
+    }
 }

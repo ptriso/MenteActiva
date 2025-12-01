@@ -13,7 +13,7 @@ public interface ProfessionalService {
     void delete(Long id);
     List<ProfessionalResponseDTO> listAll();
     ProfessionalResponseDTO listId(Long id);
-
+    void createIfNotExists(Long userId);
     List<NativeQuery_TotalCitasPorProfesionalDTO> countAppointmentsByProfessional();
 
 }

@@ -36,4 +36,6 @@ public interface ProfessionalsRepository extends JpaRepository<Profesionals, Lon
 
     Optional<Profesionals> findByUser_Id(Long userId);
 
+    boolean existsByNameAndLastnameAndIdNot(String name, String lastname, Long id);
+
 }

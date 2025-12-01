@@ -20,20 +20,20 @@ public class Profesionals {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name ="name",length = 50,nullable = false)
+    @Column(name ="name",length = 50,nullable = true)
     private String name;
 
-    @Column(name ="lastname",length = 50,nullable = false)
+    @Column(name ="lastname",length = 50,nullable = true)
     private String lastname;
 
-    @Column(name ="specialization", nullable = false)
+    @Column(name ="specialization", nullable = true)
     @Enumerated(EnumType.STRING)
     private Specialization  specialization;
 
-    @Column(name ="mail",length = 200,nullable = false)
+    @Column(name ="mail",length = 200,nullable = true)
     private String mail;
 
-    @Column(name ="phone",length = 15,nullable = false)
+    @Column(name ="phone",length = 15,nullable = true)
     private String phone;
 
     @JsonIgnore
