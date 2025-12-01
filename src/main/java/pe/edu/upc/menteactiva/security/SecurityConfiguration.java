@@ -30,6 +30,8 @@ public class SecurityConfiguration {
             "/upc/MenteActiva/User/login",
             "/upc/MenteActiva/User/register",
             "/upc/MenteActiva/User/registrar",
+            "/upc/MenteActiva/Clients/registrar",
+            "/upc/MenteActiva/Professionals/registrar",
             "/upc/MenteActiva/Authority/listartodos"
     };
 
@@ -95,6 +97,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/upc/MenteActiva/Clients/registrar").hasAnyAuthority( "ROLE_ADMIN","ROLE_CLIENT")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Clients/listartodos").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/Clients/modificar/**").hasAnyAuthority( "ROLE_ADMIN","ROLE_CLIENT")
+                .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Clients/**").hasAnyAuthority( "ROLE_ADMIN","ROLE_CLIENT")
                 .requestMatchers(HttpMethod.DELETE, "/upc/MenteActiva/Clients/eliminar/**").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.POST, "/upc/MenteActiva/Consents/registrar").hasAnyAuthority( "ROLE_ADMIN","ROLE_CLIENT")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Consents/listartodos").hasAnyAuthority( "ROLE_ADMIN")

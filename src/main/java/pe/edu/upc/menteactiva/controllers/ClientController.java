@@ -40,4 +40,9 @@ public class ClientController {
         clientService.delete(id);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientResponseDTO> findById(@PathVariable Long id) {
+        ClientResponseDTO client = clientService.findById(id);
+        return ResponseEntity.ok(client);
+    }
 }
