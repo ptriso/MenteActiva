@@ -16,6 +16,7 @@ import pe.edu.upc.menteactiva.repositories.VideoRepository;
 import pe.edu.upc.menteactiva.services.VideoService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VideoServiceImplements  implements VideoService {
@@ -88,16 +89,8 @@ public class VideoServiceImplements  implements VideoService {
         }).toList();
     }
 
-    @Override
     public List<NativeQuery_MostViewedVideosDTO> getMostViewedVideos() {
-        return videoRepository.getMostViewedVideos()
-                .stream()
-                .map(obj -> new NativeQuery_MostViewedVideosDTO(
-                        (String) obj[0],                // titulo
-                        (String) obj[1],                // autor
-                        ((Number) obj[2]).longValue()   // total_vistas
-                ))
-                .toList();
+        return this.videoRepository.getMostViewedVideos();
     }
 
 
@@ -113,5 +106,11 @@ public class VideoServiceImplements  implements VideoService {
     @Override
     public List<Videos> buscarPorTitulo(String q) {
         return videoRepository.findByTitleContainingIgnoreCase(q);
+    }
+
+
+    public List<VideoResponseDTO> listByProfesional(Long idProfessional) {
+        List<Videos> list = this.videoRepository.findByProfesionalId(idProfessional);
+        return (List)list.stream().map((v) -> (VideoResponseDTO)this.modelMapper.map(v, VideoResponseDTO.class)).collect(Collectors.toList());
     }
 }

@@ -1,14 +1,16 @@
 package pe.edu.upc.menteactiva.dtos.querys;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class NativeQuery_MostViewedVideosDTO {
-    private String titulo;
-    private String autor;
-    private Long totalVistas;
+public interface NativeQuery_MostViewedVideosDTO {
+    Long getVideo_id();
+
+    String getVideo_title();
+
+    Integer getTotal_views();
+
+    String getAuthor_name();
+
+    String getAuthor_lastname();
+
+    Long getAuthor_id();
 }

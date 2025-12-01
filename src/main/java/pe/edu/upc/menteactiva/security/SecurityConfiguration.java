@@ -94,6 +94,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/Chats/modificar/**").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/upc/MenteActiva/Chats/eliminar/**").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Chats/cliente/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
+                .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Clients/listByProfessional/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROFESSIONAL") // Agregado permiso para el endpoint de pacientes
                 .requestMatchers(HttpMethod.POST, "/upc/MenteActiva/Clients/registrar").hasAnyAuthority( "ROLE_ADMIN","ROLE_CLIENT")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Clients/listartodos").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/Clients/modificar/**").hasAnyAuthority( "ROLE_ADMIN","ROLE_CLIENT")
@@ -133,14 +134,14 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/listartodos").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/Videos/modificar/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_PROFESSIONAL", "ROLE_CLIENT")
                 .requestMatchers(HttpMethod.DELETE, "/upc/MenteActiva/Videos/eliminar/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_PROFESSIONAL")
-                .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/VideosMasVistos/**").hasAnyAuthority( "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/VideosMasVistos/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/{professionalId}/top-largos").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/{professionalId}/count").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/search").hasAnyAuthority( "ROLE_ADMIN")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Chats/historial/cliente/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Schedules/profesional/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/Appointments/cancelar/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
-
+                .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/profesional/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROFESSIONAL")
 
 
 

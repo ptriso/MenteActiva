@@ -10,6 +10,8 @@ import pe.edu.upc.menteactiva.dtos.request.ProfessionalRequestDTO;
 import pe.edu.upc.menteactiva.dtos.querys.NativeQuery_TotalCitasPorProfesionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.ProfessionalResponseDTO;
 import pe.edu.upc.menteactiva.entities.Profesionals;
+import pe.edu.upc.menteactiva.enums.Specialization;
+import pe.edu.upc.menteactiva.repositories.ClientRepository;
 import pe.edu.upc.menteactiva.repositories.ProfessionalsRepository;
 import pe.edu.upc.menteactiva.repositories.UserRepository;
 import pe.edu.upc.menteactiva.services.ProfessionalService;
@@ -27,6 +29,9 @@ public class ProfessionalServiceImplements implements ProfessionalService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Override
     public ProfessionalResponseDTO create(ProfessionalRequestDTO dto) {
@@ -57,8 +62,14 @@ public class ProfessionalServiceImplements implements ProfessionalService {
         String name = dto.getName().trim();
         String lastname = dto.getLastname().trim();
 
-        if (professionalsRepository.existsByNameAndLastname(name, lastname)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe otro profesional con ese nombre y apellido");
+        boolean existsOther = professionalsRepository
+                .existsByNameAndLastnameAndIdNot(name, lastname, id);
+
+        if (existsOther) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Ya existe otro profesional con ese nombre y apellido"
+            );
         }
 
         p.setName(dto.getName());
@@ -104,6 +115,39 @@ public class ProfessionalServiceImplements implements ProfessionalService {
 
         return modelMapper.map(profesional, ProfessionalResponseDTO.class);
     }
+    @Override
+    public void createIfNotExists(Long userId) {
 
+        // Si ya tiene perfil de profesional, no hacemos nada
+        if (professionalsRepository.findByUser_Id(userId).isPresent()) {
+            return;
+        }
 
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+        // Intentar recuperar datos desde el perfil de CLIENTE
+        var clientOpt = clientRepository.findByUser_Id(userId);
+
+        Profesionals p = new Profesionals();
+        p.setUser(user);
+
+        if (clientOpt.isPresent()) {
+            var c = clientOpt.get();
+            p.setName(c.getName());
+            p.setLastname(c.getLastname());
+            p.setMail(c.getMail());
+            p.setPhone(c.getPhone());
+        } else {
+            // Sin cliente, valores mínimos
+            p.setName("");
+            p.setLastname("");
+            p.setMail("");
+            p.setPhone("");
+        }
+
+        p.setSpecialization(Specialization.NONE); // valor por defecto del enum
+
+        professionalsRepository.save(p);
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
 import pe.edu.upc.menteactiva.entities.Appointments;
+import pe.edu.upc.menteactiva.entities.Clients;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -105,6 +106,8 @@ public interface AppointmentRepository extends JpaRepository<Appointments, Long>
       AND a.status.statusap <> pe.edu.upc.menteactiva.enums.StatusAp.CANCELADA
 """)
     boolean existsNonCancelledBySchedule(@Param("scheduleId") Long scheduleId);
+    @Query("SELECT DISTINCT a.client FROM Appointments a WHERE a.schedule.profesional.id = :idProfessional")
+    List<Clients> findClientsByProfessionalId(@Param("idProfessional") Long idProfessional);
 }
 
 

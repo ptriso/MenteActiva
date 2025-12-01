@@ -11,5 +11,6 @@ public interface ClientService {
     void delete(Long id);
     List<ClientResponseDTO> listAll();
     ClientResponseDTO findById(Long id);
-
+    void createIfNotExists(Long userId);
+    List<ClientResponseDTO> listByProfessional(Long idProfessional);
 }
