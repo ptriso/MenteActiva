@@ -51,7 +51,6 @@ public class AppointmentServiceImplements implements AppointmentService {
     @Transactional
     public AppointmentResponseDTO create(AppointmentRequestDTO dto) {
 
-        // 1) Validar que el horario no esté ocupado (igual que antes)
         if (appointmentsRepository.existsNonCancelledBySchedule(dto.getScheduleId())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
@@ -59,7 +58,6 @@ public class AppointmentServiceImplements implements AppointmentService {
             );
         }
 
-        // 2) Buscar entidades relacionadas
         Clients client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Cliente no encontrado"));
@@ -68,12 +66,10 @@ public class AppointmentServiceImplements implements AppointmentService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Horario no encontrado"));
 
-        // 🔴 3) IGNORAR dto.getStatusId() y forzar estado PROGRAMADA
         Status statusProgramada = statusRepository.findByStatusap(StatusAp.PROGRAMADA)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Estado PROGRAMADA no encontrado"));
 
-        // 4) Crear y guardar la cita
         Appointments appointment = new Appointments();
         appointment.setClient(client);
         appointment.setSchedule(schedule);
@@ -81,7 +77,6 @@ public class AppointmentServiceImplements implements AppointmentService {
 
         Appointments saved = appointmentsRepository.save(appointment);
 
-        // 5) Devolver DTO
         return modelMapper.map(saved, AppointmentResponseDTO.class);
     }
 
@@ -160,8 +155,10 @@ public class AppointmentServiceImplements implements AppointmentService {
         Appointments appt = appointmentsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
 
-        Status statusCancelada = statusRepository.findById(4L)
+        // ✅ Buscamos por ENUM, no por ID mágico 4
+        Status statusCancelada = statusRepository.findByStatusap(StatusAp.CANCELADA)
                 .orElseThrow(() -> new RuntimeException("Estado CANCELADA no existe"));
+
         appt.setStatus(statusCancelada);
         appointmentsRepository.save(appt);
     }

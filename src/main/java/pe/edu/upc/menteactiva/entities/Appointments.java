@@ -31,8 +31,8 @@ public class Appointments {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "schedules_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "schedules_id", nullable = false)
     private Schedules schedule;
 
     @JsonIgnore
