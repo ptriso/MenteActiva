@@ -11,6 +11,7 @@ import pe.edu.upc.menteactiva.dtos.querys.TopEspecialidadResponseDTO;
 import pe.edu.upc.menteactiva.dtos.querys.TopProfesionalResponseDTO;
 import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AppointmentProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
 import pe.edu.upc.menteactiva.entities.Appointments;
 import pe.edu.upc.menteactiva.entities.Clients;
@@ -50,10 +51,7 @@ public class AppointmentServiceImplements implements AppointmentService {
     @Transactional
     public AppointmentResponseDTO create(AppointmentRequestDTO dto) {
 
-        Long scheduleId = dto.getScheduleId();
-
-        Long ID_CANCELADA = 4L;
-
+        // 1) Validar que el horario no esté ocupado (igual que antes)
         if (appointmentsRepository.existsNonCancelledBySchedule(dto.getScheduleId())) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
@@ -70,19 +68,20 @@ public class AppointmentServiceImplements implements AppointmentService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Horario no encontrado"));
 
-        Status status = statusRepository.findById(dto.getStatusId())
+        // 🔴 3) IGNORAR dto.getStatusId() y forzar estado PROGRAMADA
+        Status statusProgramada = statusRepository.findByStatusap(StatusAp.PROGRAMADA)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Estado no encontrado"));
+                        HttpStatus.NOT_FOUND, "Estado PROGRAMADA no encontrado"));
 
-        // 3) Crear y guardar la cita
+        // 4) Crear y guardar la cita
         Appointments appointment = new Appointments();
         appointment.setClient(client);
         appointment.setSchedule(schedule);
-        appointment.setStatus(status);
+        appointment.setStatus(statusProgramada);
 
         Appointments saved = appointmentsRepository.save(appointment);
 
-        // 4) Devolver DTO
+        // 5) Devolver DTO
         return modelMapper.map(saved, AppointmentResponseDTO.class);
     }
 
@@ -167,5 +166,50 @@ public class AppointmentServiceImplements implements AppointmentService {
         appointmentsRepository.save(appt);
     }
 
+    @Override
+    public List<AppointmentProfessionalDTO> listByProfessional(Long idProfessional) {
+        List<Appointments> appts = appointmentsRepository.findByProfessional(idProfessional);
+
+        return appts.stream().map(a -> {
+            AppointmentProfessionalDTO dto = new AppointmentProfessionalDTO();
+            dto.setId(a.getId());
+            dto.setClientName(a.getClient().getName());
+            dto.setClientLastname(a.getClient().getLastname());
+            dto.setDate(a.getSchedule().getDate());
+            dto.setTimeStart(a.getSchedule().getTime_start());
+            dto.setTimeEnd(a.getSchedule().getTime_ends());
+            dto.setStatus(a.getStatus().getStatusap().name());
+            return dto;
+        }).toList();
+    }
+
+    @Override
+    public List<AppointmentProfessionalDTO> listUpcomingByProfessional(Long idProfessional) {
+        List<Appointments> appts = appointmentsRepository.findUpcomingByProfessional(idProfessional);
+
+        return appts.stream().map(a -> {
+            AppointmentProfessionalDTO dto = new AppointmentProfessionalDTO();
+            dto.setId(a.getId());
+            dto.setClientName(a.getClient().getName());
+            dto.setClientLastname(a.getClient().getLastname());
+            dto.setDate(a.getSchedule().getDate());
+            dto.setTimeStart(a.getSchedule().getTime_start());
+            dto.setTimeEnd(a.getSchedule().getTime_ends());
+            dto.setStatus(a.getStatus().getStatusap().name());
+            return dto;
+        }).toList();
+    }
+    @Override
+    @Transactional
+    public void updateStatus(Long id, StatusAp newStatusAp) {
+        Appointments appt = appointmentsRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada"));
+
+        Status status = statusRepository.findByStatusap(newStatusAp)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estado no encontrado"));
+
+        appt.setStatus(status);
+        appointmentsRepository.save(appt);
+    }
 }
 

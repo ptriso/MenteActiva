@@ -1,5 +1,6 @@
 package pe.edu.upc.menteactiva.serviceimplements;
 
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,59 @@ public class Session_SummariesServiceImplements implements Session_SummariesServ
                 .stream()
                 .map(s -> modelMapper.map(s, Session_SummariesResponseDTO.class))
                 .toList();
+    }
+    @Override
+    public Session_SummariesResponseDTO findByAppointmentId(Long appointmentId) {
+        Session_Summaries entity = sessionSummariesRepository.findByAppointment_Id(appointmentId)
+                .orElseThrow(() -> new RuntimeException("No existe resumen para esta cita"));
+
+        return modelMapper.map(entity, Session_SummariesResponseDTO.class);
+    }
+    @Override
+    @Transactional
+    public Session_SummariesResponseDTO saveOrUpdateByAppointment(
+            Long appointmentId,
+            Session_SummariesRequestDTO dto
+    ) {
+        // 1) Buscar la cita
+        Appointments appointment = appointmentsRepository.findById(appointmentId)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada")
+                );
+
+        // 2) Buscar si ya existe un resumen de sesión para esa cita
+        Session_Summaries entity = sessionSummariesRepository
+                .findByAppointment_Id(appointmentId)
+                .orElseGet(Session_Summaries::new);
+
+        // 3) Si es nuevo, asociar la cita
+        if (entity.getId() == null) {
+            entity.setAppointment(appointment);
+        }
+
+        // 4) Actualizar campos (según tu entidad REAL)
+        //    Asumo que tu DTO tiene también task, progress, conclusion
+        //    Si no los tiene, puedes poner valores por defecto.
+        if (dto.getTask() != null) {
+            entity.setTask(dto.getTask());
+        } else if (entity.getTask() == null) {
+            entity.setTask("Tarea no registrada");
+        }
+
+        if (dto.getProgress() != null) {
+            entity.setProgress(dto.getProgress());
+        } else if (entity.getProgress() == null) {
+            entity.setProgress("Progreso no registrado");
+        }
+
+        if (dto.getConclusion() != null) {
+            entity.setConclusion(dto.getConclusion());
+        }
+
+        // 5) Guardar
+        Session_Summaries saved = sessionSummariesRepository.save(entity);
+
+        // 6) Devolver DTO
+        return modelMapper.map(saved, Session_SummariesResponseDTO.class);
     }
 }

@@ -37,5 +37,22 @@ public class Session_SummariesController {
         sessionSummariesService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+    @GetMapping("/appointment/{appointmentId}")
+    public ResponseEntity<Session_SummariesResponseDTO> getByAppointment(
+            @PathVariable Long appointmentId) {
 
+        Session_SummariesResponseDTO dto =
+                sessionSummariesService.findByAppointmentId(appointmentId);
+
+        return ResponseEntity.ok(dto);
+    }
+    @PutMapping("/appointment/{appointmentId}")
+    public ResponseEntity<Session_SummariesResponseDTO> saveOrUpdateByAppointment(
+            @PathVariable Long appointmentId,
+            @Valid @RequestBody Session_SummariesRequestDTO dto
+    ) {
+        Session_SummariesResponseDTO resp = sessionSummariesService
+                .saveOrUpdateByAppointment(appointmentId, dto);
+        return ResponseEntity.ok(resp);
+    }
 }
