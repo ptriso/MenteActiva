@@ -10,4 +10,9 @@ public interface Session_SummariesService {
     Session_SummariesResponseDTO update(Long id, Session_SummariesRequestDTO dto);
     void delete(Long id);
     List<Session_SummariesResponseDTO> listAll();
+    Session_SummariesResponseDTO findByAppointmentId(Long appointmentId);
+    Session_SummariesResponseDTO saveOrUpdateByAppointment(
+            Long appointmentId,
+            Session_SummariesRequestDTO dto
+    );
 }

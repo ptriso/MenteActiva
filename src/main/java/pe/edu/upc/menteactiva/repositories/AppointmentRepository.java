@@ -108,6 +108,27 @@ public interface AppointmentRepository extends JpaRepository<Appointments, Long>
     boolean existsNonCancelledBySchedule(@Param("scheduleId") Long scheduleId);
     @Query("SELECT DISTINCT a.client FROM Appointments a WHERE a.schedule.profesional.id = :idProfessional")
     List<Clients> findClientsByProfessionalId(@Param("idProfessional") Long idProfessional);
+
+    //  Listado general de citas por profesional
+    @Query("""
+        SELECT a
+        FROM Appointments a
+        JOIN a.schedule s
+        WHERE s.profesional.id = :idProfessional
+        ORDER BY s.date, s.time_start
+    """)
+    List<Appointments> findByProfessional(@Param("idProfessional") Long idProfessional);
+
+    // Próximas citas del profesional
+    @Query("""
+        SELECT a
+        FROM Appointments a
+        JOIN a.schedule s
+        WHERE s.profesional.id = :idProfessional
+          AND (s.date > CURRENT_DATE OR (s.date = CURRENT_DATE AND s.time_start > CURRENT_TIME))
+        ORDER BY s.date, s.time_start
+    """)
+    List<Appointments> findUpcomingByProfessional(@Param("idProfessional") Long idProfessional);
 }
 
 

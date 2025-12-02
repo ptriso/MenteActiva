@@ -10,7 +10,10 @@ import pe.edu.upc.menteactiva.dtos.querys.TopEspecialidadResponseDTO;
 import pe.edu.upc.menteactiva.dtos.querys.TopProfesionalResponseDTO;
 import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AppointmentProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
+import pe.edu.upc.menteactiva.entities.Appointments;
+import pe.edu.upc.menteactiva.enums.StatusAp;
 import pe.edu.upc.menteactiva.services.AppointmentService;
 
 import java.util.List;
@@ -68,6 +71,24 @@ public class AppointmentController {
     @PutMapping("/cancelar/{id}")
     public ResponseEntity<Void> cancel(@PathVariable Long id) {
         appointmentService.cancel(id);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/profesional/{idProfessional}/citas")
+    public List<AppointmentProfessionalDTO> listByProfessional(@PathVariable Long idProfessional) {
+        return appointmentService.listByProfessional(idProfessional);
+    }
+
+    @GetMapping("/profesional/{idProfessional}/proximas")
+    public List<AppointmentProfessionalDTO> listUpcoming(@PathVariable Long idProfessional) {
+        return appointmentService.listUpcomingByProfessional(idProfessional);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> updateStatus(
+            @PathVariable Long id,
+            @RequestParam("status") StatusAp statusAp
+    ) {
+        appointmentService.updateStatus(id, statusAp);
         return ResponseEntity.ok().build();
     }
 }

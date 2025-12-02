@@ -46,4 +46,9 @@ public class ChatController {
         List<Chats> historial = chatService.historialPorCliente(clientId);
         return ResponseEntity.ok(historial);
     }
+    @PutMapping("/auto/{appointmentId}")
+    public ResponseEntity<Chats> generarChatAutomatico(@PathVariable Long appointmentId) {
+        Chats chat = chatService.generarChatAuto(appointmentId);
+        return ResponseEntity.ok(chat);
+    }
 }

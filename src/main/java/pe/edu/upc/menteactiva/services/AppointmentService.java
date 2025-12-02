@@ -3,7 +3,10 @@ package pe.edu.upc.menteactiva.services;
 import pe.edu.upc.menteactiva.dtos.querys.TopEspecialidadResponseDTO;
 import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
+import pe.edu.upc.menteactiva.dtos.responses.AppointmentProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
+import pe.edu.upc.menteactiva.entities.Appointments;
+import pe.edu.upc.menteactiva.enums.StatusAp;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +22,7 @@ public interface AppointmentService {
     List<pe.edu.upc.menteactiva.dtos.querys.TopClientesResponseDTO> topClientesMasCitasTodas(int top);
     List<AppointmentClientResponseDTO> listByClientId(Long clientId);
     void cancel(Long id);
+    List<AppointmentProfessionalDTO> listByProfessional(Long idProfessional);
+    List<AppointmentProfessionalDTO> listUpcomingByProfessional(Long idProfessional);
+    void updateStatus(Long id, StatusAp newStatusAp);
 }
