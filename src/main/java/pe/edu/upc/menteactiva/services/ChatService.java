@@ -12,4 +12,5 @@ public interface ChatService {
     void delete(Long id);
     List<ChatResponseDTO> listAll();
     List<Chats> historialPorCliente(Long clientId);
+    Chats generarChatAuto(Long appointmentId);
 }

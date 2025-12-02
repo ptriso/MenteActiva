@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="schedules")
@@ -36,7 +38,7 @@ public class Schedules {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne(mappedBy = "schedule", fetch = FetchType.EAGER)
-    private Appointments appointment;
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY)
+    private List<Appointments> appointments = new ArrayList<>();
 
 }
