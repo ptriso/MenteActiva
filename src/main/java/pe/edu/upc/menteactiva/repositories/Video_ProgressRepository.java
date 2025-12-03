@@ -8,6 +8,7 @@ import pe.edu.upc.menteactiva.entities.Clients;
 import pe.edu.upc.menteactiva.entities.Video_Progress;
 import pe.edu.upc.menteactiva.entities.Videos;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface Video_ProgressRepository extends JpaRepository<Video_Progress, Long> {
@@ -16,4 +17,6 @@ public interface Video_ProgressRepository extends JpaRepository<Video_Progress, 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM Video_Progress vp WHERE vp.id = :id")
     int hardDeleteById(@Param("id") Long id);
+
+    List<Video_Progress> findByClientId(Long clientId);
 }

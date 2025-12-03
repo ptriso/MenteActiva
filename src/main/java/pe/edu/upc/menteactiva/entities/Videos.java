@@ -2,17 +2,12 @@ package pe.edu.upc.menteactiva.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Generated;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(
@@ -57,11 +52,9 @@ public class Videos {
     )
     private Profesionals profesional;
     @JsonIgnore
-    @OneToOne(
-            mappedBy = "video",
-            fetch = FetchType.EAGER
-    )
-    private Video_Progress video_progress;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "video", fetch = FetchType.LAZY)
+    private List<Video_Progress> video_progress = new ArrayList<>();
 
     @Generated
     public Long getId() {
@@ -94,7 +87,7 @@ public class Videos {
     }
 
     @Generated
-    public Video_Progress getVideo_progress() {
+    public List<Video_Progress> getVideo_progress() {
         return this.video_progress;
     }
 
@@ -129,7 +122,7 @@ public class Videos {
     }
 
     @Generated
-    public void setVideo_progress(final Video_Progress video_progress) {
+    public void setVideo_progress(final List<Video_Progress> video_progress) {
         this.video_progress = video_progress;
     }
 
@@ -138,7 +131,13 @@ public class Videos {
     }
 
     @Generated
-    public Videos(final Long id, final String title, final String description, final String url, final Integer duration, final Profesionals profesional, final Video_Progress video_progress) {
+    public Videos(final Long id,
+                  final String title,
+                  final String description,
+                  final String url,
+                  final Integer duration,
+                  final Profesionals profesional,
+                  final List<Video_Progress> video_progress) {
         this.id = id;
         this.title = title;
         this.description = description;

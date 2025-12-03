@@ -23,7 +23,7 @@ public class Video_Progress {
 
     @JsonIgnore
     @ToString.Exclude
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Videos video;
 

@@ -12,5 +12,6 @@ public interface Video_ProgressService {
 
     void delete(Long id);
     List<Video_ProgressResponseDTO> listAll();
+    List<Video_ProgressResponseDTO> listByClient(Long clientId);
 
 }
