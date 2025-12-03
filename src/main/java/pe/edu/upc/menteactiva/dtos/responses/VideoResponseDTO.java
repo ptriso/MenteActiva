@@ -14,6 +14,7 @@ public class VideoResponseDTO {
     private String url;
     private Integer duration;
     private Long professionalId;
+    private String professionalName;
 
     @Generated
     public Long getId() {
@@ -74,15 +75,29 @@ public class VideoResponseDTO {
     public void setProfessionalId(final Long professionalId) {
         this.professionalId = professionalId;
     }
-
     @Generated
-    public VideoResponseDTO(final Long id, final String title, final String description, final String url, final Integer duration, final Long professionalId) {
+    public String getProfessionalName() {
+        return this.professionalName;
+    }
+    @Generated
+    public void setProfessionalName(final String professionalName) {
+        this.professionalName = professionalName;
+    }
+    @Generated
+    public VideoResponseDTO(final Long id,
+                            final String title,
+                            final String description,
+                            final String url,
+                            final Integer duration,
+                            final Long professionalId,
+                            final String professionalName) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.url = url;
         this.duration = duration;
         this.professionalId = professionalId;
+        this.professionalName = professionalName;
     }
 
     @Generated

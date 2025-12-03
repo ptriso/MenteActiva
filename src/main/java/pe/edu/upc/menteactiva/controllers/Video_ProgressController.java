@@ -27,6 +27,10 @@ public class Video_ProgressController {
     @GetMapping("/listartodos")
     public List<Video_ProgressResponseDTO> listAll(){ return video_progressService.listAll(); }
 
+    @GetMapping("/cliente/{clientId}")
+    public List<Video_ProgressResponseDTO> listByClient(@PathVariable Long clientId) {
+        return video_progressService.listByClient(clientId);
+    }
     @PutMapping("/modificar/{id}")
     public ResponseEntity<Video_ProgressResponseDTO> update(@PathVariable Long id, @Valid @RequestBody Video_ProgressRequestDTO dto){
         return ResponseEntity.ok(video_progressService.update(id, dto));
