@@ -90,7 +90,17 @@ public class VideoServiceImplements  implements VideoService {
     }
 
     public List<NativeQuery_MostViewedVideosDTO> getMostViewedVideos() {
-        return this.videoRepository.getMostViewedVideos();
+        return videoRepository.getMostViewedVideos()
+                .stream()
+                .map(obj -> new NativeQuery_MostViewedVideosDTO(
+                        ((Number) obj[0]).longValue(),    // videoId
+                        (String) obj[1],                   // videoTitle
+                        ((Number) obj[2]).intValue(),      // totalViews
+                        (String) obj[3],                   // authorName
+                        (String) obj[4],                   // authorLastname
+                        ((Number) obj[5]).longValue()      // authorId
+                ))
+                .toList();
     }
 
 

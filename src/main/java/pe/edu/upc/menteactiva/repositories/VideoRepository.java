@@ -11,10 +11,23 @@ public interface VideoRepository extends JpaRepository<Videos, Long> {
     boolean existsById(Long id);
 
     @Query(
-            value = "SELECT v.id AS video_id, v.title AS video_title, SUM(vp.views_count) AS total_views, p.name AS author_name, p.lastname AS author_lastname, p.id AS author_id FROM videos v JOIN video_progress vp ON v.id = vp.video_id JOIN profesionals p ON v.profesional_id = p.id GROUP BY v.id, v.title, p.name, p.lastname, p.id ORDER BY total_views DESC",
+            value = """
+    SELECT 
+        v.id AS videoId,
+        v.title AS videoTitle,
+        SUM(vp.views_count) AS totalViews,
+        p.name AS authorName,
+        p.lastname AS authorLastname,
+        p.id AS authorId
+    FROM videos v
+    JOIN video_progress vp ON v.id = vp.video_id
+    JOIN profesionals p ON v.profesional_id = p.id
+    GROUP BY v.id, v.title, p.name, p.lastname, p.id
+    ORDER BY totalViews DESC
+    """,
             nativeQuery = true
     )
-    List<NativeQuery_MostViewedVideosDTO> getMostViewedVideos();
+    List<Object[]> getMostViewedVideos();
     //Top 5 más largos de un profesional
     List<Videos> findTop5ByProfesional_IdOrderByDurationDesc(Long professionalId);
 
