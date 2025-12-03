@@ -53,4 +53,6 @@ public class Clients {
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private List<Video_Progress> video_progress;
 
+
+
 }

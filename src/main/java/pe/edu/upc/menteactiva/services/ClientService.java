@@ -13,4 +13,5 @@ public interface ClientService {
     ClientResponseDTO findById(Long id);
     void createIfNotExists(Long userId);
     List<ClientResponseDTO> listByProfessional(Long idProfessional);
+    ClientResponseDTO getById(Long id);
 }

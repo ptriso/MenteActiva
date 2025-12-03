@@ -156,4 +156,29 @@ public class ClientServiceImplements implements ClientService {
                 .map(c -> modelMapper.map(c, ClientResponseDTO.class))
                 .collect(Collectors.toList());
     }
+    @Override
+    public ClientResponseDTO getById(Long id) {
+        Clients client = clientRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
+
+        ClientResponseDTO dto = modelMapper.map(client, ClientResponseDTO.class);
+
+        if (client.getUser() != null) {
+            dto.setUserId(client.getUser().getId());
+        }
+        if (client.getConsents() != null) {
+            dto.setHasConsent(true);
+            dto.setConsentAge(client.getConsents().getAge());
+            dto.setConsentDocument(client.getConsents().getDoc_consent());
+
+            dto.setAge(client.getConsents().getAge());
+        } else {
+            dto.setHasConsent(false);
+            dto.setConsentAge(null);
+            dto.setConsentDocument(null);
+            dto.setAge(null);
+        }
+
+        return dto;
+    }
 }
