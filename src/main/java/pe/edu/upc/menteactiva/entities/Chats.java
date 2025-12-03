@@ -23,7 +23,7 @@ public class Chats {
     private String mensaje;
 
     @Column(name = "sender_type", nullable = false, length = 50)
-    private String sender_type; // "CLIENTE" o "PROFESIONAL"
+    private String sender_type;
 
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;

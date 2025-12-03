@@ -13,6 +13,6 @@ public class DTOToken {
     private String jwtToken;
     private Long id;
     private String username;
-    private String authorities; // Formato: "ROLE_USER;ROLE_ADMIN"
+    private String authorities;
     private Long profileId;
 }

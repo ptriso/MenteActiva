@@ -18,7 +18,6 @@ public class UserSecurity implements UserDetails {
         this.user = user;
     }
 
-    // IMPORTANTE: Adaptar para tu estructura con User_Authority
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getUser_authority()

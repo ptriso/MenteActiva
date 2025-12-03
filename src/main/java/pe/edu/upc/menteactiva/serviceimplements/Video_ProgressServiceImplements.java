@@ -37,14 +37,13 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
     @Override
     @Transactional
     public Video_ProgressResponseDTO create(Video_ProgressRequestDTO dto) {
-        // 1. Buscar cliente y video
+
         Clients client = clientRepository.findById(dto.getClientId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado"));
 
         Videos video = videoRepository.findById(dto.getVideoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Video no encontrado"));
 
-        // 2. Buscar si ya existe progreso para ese cliente + video
         Video_Progress vp = video_progressRepository
                 .findByClientAndVideo(client, video)
                 .orElseGet(() -> {
@@ -58,7 +57,6 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
                     return nuevo;
                 });
 
-        // 3. Actualizar porcentaje y tiempo (si vienen en el DTO)
         Long nuevoPorcentaje = (dto.getPercentage() != null)
                 ? dto.getPercentage()
                 : vp.getPercentage();
@@ -69,26 +67,21 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
             vp.setCurrent_time(dto.getCurrent_time());
         }
 
-        // 4. completed: si viene en el DTO lo respetas, si no lo calculas
         if (dto.getCompleted() != null) {
             vp.setCompleted(dto.getCompleted());
         } else {
             vp.setCompleted(nuevoPorcentaje != null && nuevoPorcentaje >= 100);
         }
 
-        // 5. Incrementar views_count SIEMPRE que se registre progreso
         Integer currentViews = (vp.getViews_count() != null) ? vp.getViews_count() : 0;
         vp.setViews_count(currentViews + 1);
 
-        // 6. Guardar
         vp = video_progressRepository.save(vp);
 
-        // 7. Mapear a DTO de salida
         Video_ProgressResponseDTO out = modelMapper.map(vp, Video_ProgressResponseDTO.class);
         out.setClientId(client.getId());
         out.setVideoId(video.getId());
 
-        // Extras: título, duración y autor
         out.setVideoTitle(video.getTitle());
         out.setDuration(video.getDuration() + " min");
 
@@ -118,7 +111,6 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
 
         vp.setCurrent_time(dto.getCurrent_time() != null ? dto.getCurrent_time() : 0);
 
-        // ✅ igual: completado a partir del porcentaje
         vp.setCompleted(percentage == 100L);
 
         vp.setViews_count(dto.getViews_count() != null ? dto.getViews_count() : 0);
@@ -142,7 +134,6 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
                 .map(vp -> {
                     Video_ProgressResponseDTO dto = modelMapper.map(vp, Video_ProgressResponseDTO.class);
 
-                    // IDs
                     if (vp.getClient() != null) {
                         dto.setClientId(vp.getClient().getId());
                     }
@@ -151,7 +142,6 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
                         dto.setVideoTitle(vp.getVideo().getTitle());
                         dto.setDuration(vp.getVideo().getDuration() + " min");
 
-                        // 🔹 AQUÍ sacamos el nombre del profesional desde la entidad Videos
                         if (vp.getVideo().getProfesional() != null) {
                             String nombreCompleto = vp.getVideo().getProfesional().getName() + " " +
                                     vp.getVideo().getProfesional().getLastname();
@@ -175,18 +165,15 @@ public class Video_ProgressServiceImplements implements Video_ProgressService {
     private Video_ProgressResponseDTO mapToResponse(Video_Progress vp) {
         Video_ProgressResponseDTO dto = modelMapper.map(vp, Video_ProgressResponseDTO.class);
 
-        // IDs explícitos
         if (vp.getClient() != null) {
             dto.setClientId(vp.getClient().getId());
         }
         if (vp.getVideo() != null) {
             dto.setVideoId(vp.getVideo().getId());
 
-            // Título y duración del video
             dto.setVideoTitle(vp.getVideo().getTitle());
             dto.setDuration(String.valueOf(vp.getVideo().getDuration()) + " min");
 
-            // Profesional dueño del video
             if (vp.getVideo().getProfesional() != null) {
                 String nombreCompleto =
                         vp.getVideo().getProfesional().getName() + " " +

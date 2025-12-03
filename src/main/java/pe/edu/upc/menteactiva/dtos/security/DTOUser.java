@@ -13,5 +13,5 @@ public class DTOUser {
     private Long id;
     private String username;
     private String password;
-    private String authorities; // Formato: "ROLE_USER;ROLE_ADMIN"
+    private String authorities;
 }

@@ -83,25 +83,19 @@ public class Session_SummariesServiceImplements implements Session_SummariesServ
             Long appointmentId,
             Session_SummariesRequestDTO dto
     ) {
-        // 1) Buscar la cita
         Appointments appointment = appointmentsRepository.findById(appointmentId)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada")
                 );
 
-        // 2) Buscar si ya existe un resumen de sesión para esa cita
         Session_Summaries entity = sessionSummariesRepository
                 .findByAppointment_Id(appointmentId)
                 .orElseGet(Session_Summaries::new);
 
-        // 3) Si es nuevo, asociar la cita
         if (entity.getId() == null) {
             entity.setAppointment(appointment);
         }
 
-        // 4) Actualizar campos (según tu entidad REAL)
-        //    Asumo que tu DTO tiene también task, progress, conclusion
-        //    Si no los tiene, puedes poner valores por defecto.
         if (dto.getTask() != null) {
             entity.setTask(dto.getTask());
         } else if (entity.getTask() == null) {
@@ -118,10 +112,8 @@ public class Session_SummariesServiceImplements implements Session_SummariesServ
             entity.setConclusion(dto.getConclusion());
         }
 
-        // 5) Guardar
         Session_Summaries saved = sessionSummariesRepository.save(entity);
 
-        // 6) Devolver DTO
         return modelMapper.map(saved, Session_SummariesResponseDTO.class);
     }
 }

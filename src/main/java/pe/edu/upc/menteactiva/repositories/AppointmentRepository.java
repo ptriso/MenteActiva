@@ -17,7 +17,6 @@ public interface AppointmentRepository extends JpaRepository<Appointments, Long>
 
     boolean existsBySchedule_Id(Long scheduleId);
 
-    // Próxima cita del cliente: (fecha futura) o (hoy y hora futura)
     @Query("""
         SELECT a
         FROM Appointments a
@@ -109,7 +108,6 @@ public interface AppointmentRepository extends JpaRepository<Appointments, Long>
     @Query("SELECT DISTINCT a.client FROM Appointments a WHERE a.schedule.profesional.id = :idProfessional")
     List<Clients> findClientsByProfessionalId(@Param("idProfessional") Long idProfessional);
 
-    //  Listado general de citas por profesional
     @Query("""
         SELECT a
         FROM Appointments a
@@ -119,7 +117,6 @@ public interface AppointmentRepository extends JpaRepository<Appointments, Long>
     """)
     List<Appointments> findByProfessional(@Param("idProfessional") Long idProfessional);
 
-    // Próximas citas del profesional
     @Query("""
         SELECT a
         FROM Appointments a

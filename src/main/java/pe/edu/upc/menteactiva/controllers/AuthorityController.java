@@ -23,8 +23,6 @@ public class AuthorityController {
     public ResponseEntity<AuthorityResponseDTO> registrar(@Valid @RequestBody AuthorityRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorityService.create(dto));
     }
-
-
     @GetMapping("/listartodos")
     public List<AuthorityResponseDTO> listall(){
         return authorityService.GetAllAuthorities();

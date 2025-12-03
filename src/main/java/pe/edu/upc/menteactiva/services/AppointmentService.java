@@ -5,7 +5,6 @@ import pe.edu.upc.menteactiva.dtos.request.AppointmentRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentClientResponseDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentProfessionalDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AppointmentResponseDTO;
-import pe.edu.upc.menteactiva.entities.Appointments;
 import pe.edu.upc.menteactiva.enums.StatusAp;
 
 import java.util.List;

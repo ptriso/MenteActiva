@@ -21,43 +21,43 @@ SELECT 'ROLE_ADMIN'
 -- USERS pro1..pro5 (idempotente)
 -- ============================
 INSERT INTO users (username, password, enabled)
-SELECT 'pro1', '$2a$12$n30HYM0OyhyBvdEEq6SOIeSSKm1KTPY9QCalOwmuwzCFwqd3HHurC', true
+SELECT 'pro1', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro1');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'pro2', '$2a$12$s4/mijOik1XsR7MQgPVsvuHOQBfjXNa435pxylkC8IuqJXmTHEp2W', true
+SELECT 'pro2', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro2');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'pro3', '$2a$12$roXIqLLhzdthgwhuDYEU7uhXY4lDUZT42qRzvRW/ddbocF/0PiGEW', true
+SELECT 'pro3', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro3');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'pro4', '$2a$12$0owfpPQ5jvwbHShyJXMpSefseNJbzakErbeCpjz3dh9TY69YpJzeC', true
+SELECT 'pro4', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro4');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'pro5', '$2a$12$6wPvJL37ZhxGKD9C7x52KeB00CrPjItzSvUv9xlFzNBVQ9eTl4od.', true
+SELECT 'pro5', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'pro5');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'cli1', '$2a$12$n30HYM0OyhyBvdEEq6SOIeSSKm1KTPY9QCalOwmuwzCFwqd3HHurC', true
+SELECT 'cli1', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli1');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'cli2', '$2a$12$IkpgZ9G2qQH3WsMGUFsJu.6z3YB09jv4v/PS0uXgEKyFlWjKcKMZW', true
+SELECT 'cli2', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli2');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'cli3', '$2a$12$Uv/0gUCm1aYJWsQrjXmyruzm3qkfCxM5W9/4Az92E2irYnrgvDrEO', true
+SELECT 'cli3', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli3');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'cli4', '$2a$12$8ubRO4YGg6VCdYn63YUnFuV2t9000xsM97HRbsJO41bWX1F6INGUO', true
+SELECT 'cli4', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli4');
 
 INSERT INTO users (username, password, enabled)
-SELECT 'cli5', '$2a$12$4NeIq6/JPj2fVl6hrxND3ezfysytgoBCJjZDA.E8FIE//BnucXT4i', true
+SELECT 'cli5', '$2a$12$4aM1qZdnY/BKqF/U9G3cZui0tJTMKLQ6cnAaGx.rruAcsquUkUS32', true
     WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'cli5');
 
 -- ============================================

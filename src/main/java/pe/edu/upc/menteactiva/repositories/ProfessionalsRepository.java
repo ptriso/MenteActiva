@@ -6,11 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upc.menteactiva.entities.Profesionals;
-import pe.edu.upc.menteactiva.enums.Specialization;
 
 import java.util.List;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface ProfessionalsRepository extends JpaRepository<Profesionals, Long> {
@@ -21,7 +19,6 @@ public interface ProfessionalsRepository extends JpaRepository<Profesionals, Lon
     @Query(value = "DELETE FROM profesionals WHERE id = :id", nativeQuery = true)
     void deleteProfesionalsById(@Param("id") Long id);
 
-    // Native query - Total de citas por profesional
     @Query(
             value = """
             SELECT p.name, p.lastname, COUNT(a.id) AS total_appointments

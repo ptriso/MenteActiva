@@ -20,12 +20,10 @@ public interface UserService {
 
     List<NativeQuery_UserClientDTO> getUsersWhoAreClients();
 
-    // ... security
     User findById(Long id);
     User findByUsername(String username);
     UserResponseDTO findByIdDTO(Long id);
     User addUser(DTOUser dtoUser);
     User addUser(User user);
     User findByEmail(String email);
-    // ... tus otros métodos
 }
