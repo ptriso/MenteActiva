@@ -49,4 +49,8 @@ public class ClientController {
     public List<ClientResponseDTO> listByProfessional(@PathVariable Long id) {
         return this.clientService.listByProfessional(id);
     }
+    @GetMapping("/listar/{id}")
+    public ResponseEntity<ClientResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(clientService.getById(id));
+    }
 }

@@ -15,4 +15,8 @@ public class ClientResponseDTO {
     private String phone;
 
     private Long userId;
+    private Boolean hasConsent;
+    private Integer age;
+    private Integer consentAge;
+    private String consentDocument;
 }
