@@ -16,11 +16,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtilService {
-    // IMPORTANTE: Cambia esta clave en producción y guárdala en variables de entorno
     private static final String JWT_SIGNATURE_KEY =
             "TUVOVEVFQUNUT0RBX01FTlRFX0FDVElWQV9TRUdVUklEQURfSldUX1NFQ1JFVF9LRVlfMjAyNQ==";
 
-    // Token válido por 3 horas
     private static final Long JWT_TOKEN_VALIDITY = 1000 * 60 * 60 * (long)3;
 
     private SecretKey getSigningKey(){
@@ -70,7 +68,6 @@ public class JwtUtilService {
     public String generateToken(UserSecurity securityUser) {
         Map<String, Object> claims = new HashMap<>();
 
-        // Extraer authorities de User_Authority
         Object authorities = securityUser.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)

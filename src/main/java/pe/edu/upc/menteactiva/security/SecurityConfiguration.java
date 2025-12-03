@@ -47,32 +47,24 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // Agregar filtro JWT antes de UsernamePasswordAuthenticationFilter
         http.addFilterBefore(
                 jwtRequestFilter,
                 UsernamePasswordAuthenticationFilter.class
         );
 
-        // Deshabilitar CSRF (necesario para APIs REST)
         http.csrf(AbstractHttpConfigurer::disable);
 
-        // Configurar CORS
         http.cors(Customizer.withDefaults());
 
-        // Configurar autorización de endpoints
         http.authorizeHttpRequests((authz) -> authz
-                // Rutas públicas
                 .requestMatchers(AUTH_WHITELIST).permitAll()
 
-                // 👥 Usuarios Profesionales (requiere rol PRO o ADMIN)
                 .requestMatchers("/upc/MenteActiva/User/UsuariosProfesionales")
                 .hasAnyAuthority("ROLE_PROFESSIONAL", "ROLE_ADMIN")
 
-                // 👤 Usuarios Clientes (requiere rol CLIENT o ADMIN)
                 .requestMatchers("/upc/MenteActiva/User/UsuariosClientes")
                 .hasAnyAuthority("ROLE_CLIENT", "ROLE_ADMIN")
 
-                // 👨‍💻 Operaciones generales sobre usuarios (listar, modificar, eliminar)
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/User/listartodos").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/User/modificar/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.DELETE, "/upc/MenteActiva/User/eliminar/**").hasAuthority("ROLE_ADMIN")
@@ -143,16 +135,9 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Schedules/profesional/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.PUT, "/upc/MenteActiva/Appointments/cancelar/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CLIENT", "ROLE_PROFESSIONAL")
                 .requestMatchers(HttpMethod.GET, "/upc/MenteActiva/Videos/profesional/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROFESSIONAL")
-
-
-
-
-
-                // 🔐 Cualquier otra petición requiere autenticación
                 .anyRequest().authenticated()
         );
 
-        // Sesiones STATELESS (importante para JWT)
         http.sessionManagement((session) ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );

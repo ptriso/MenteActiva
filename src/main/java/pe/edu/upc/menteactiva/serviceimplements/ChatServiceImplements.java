@@ -77,7 +77,6 @@ public class ChatServiceImplements implements ChatService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Cita no encontrada"));
 
-        // 🔴 VALIDACIÓN: no permitir chat para CANCELADA o INASISTENCIA
         if (ap.getStatus() != null &&
                 (ap.getStatus().getStatusap() == StatusAp.CANCELADA
                         || ap.getStatus().getStatusap() == StatusAp.INASISTENCIA)) {
@@ -91,7 +90,6 @@ public class ChatServiceImplements implements ChatService {
         Clients cliente = ap.getClient();
         var profesional = ap.getSchedule().getProfesional();
 
-        // Generamos contenido automático del chat
         String contenido = ChatGenerator.generarChat(cliente, profesional);
 
         Chats chat = ap.getChats();

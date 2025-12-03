@@ -101,9 +101,9 @@ public class ProfessionalServiceImplements implements ProfessionalService {
         return professionalsRepository.countAppointmentsByProfessional()
                 .stream()
                 .map(obj -> new NativeQuery_TotalCitasPorProfesionalDTO(
-                        (String) obj[0],                // nombre
-                        (String) obj[1],                // apellido
-                        ((Number) obj[2]).longValue()   // cantidad de citas
+                        (String) obj[0],
+                        (String) obj[1],
+                        ((Number) obj[2]).longValue()
                 ))
                 .toList();
     }
@@ -118,7 +118,6 @@ public class ProfessionalServiceImplements implements ProfessionalService {
     @Override
     public void createIfNotExists(Long userId) {
 
-        // Si ya tiene perfil de profesional, no hacemos nada
         if (professionalsRepository.findByUser_Id(userId).isPresent()) {
             return;
         }
@@ -126,7 +125,6 @@ public class ProfessionalServiceImplements implements ProfessionalService {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-        // Intentar recuperar datos desde el perfil de CLIENTE
         var clientOpt = clientRepository.findByUser_Id(userId);
 
         Profesionals p = new Profesionals();
@@ -139,14 +137,13 @@ public class ProfessionalServiceImplements implements ProfessionalService {
             p.setMail(c.getMail());
             p.setPhone(c.getPhone());
         } else {
-            // Sin cliente, valores mínimos
             p.setName("");
             p.setLastname("");
             p.setMail("");
             p.setPhone("");
         }
 
-        p.setSpecialization(Specialization.NONE); // valor por defecto del enum
+        p.setSpecialization(Specialization.NONE);
 
         professionalsRepository.save(p);
     }

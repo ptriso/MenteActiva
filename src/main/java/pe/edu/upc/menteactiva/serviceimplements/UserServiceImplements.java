@@ -96,11 +96,11 @@ class UserServiceImplements implements UserService {
         return userRepository.getUsersWhoAreProfessionals()
                 .stream()
                 .map(obj -> new NativeQuery_UserProfessionalDTO(
-                        ((Number) obj[0]).longValue(), // idUsuario
-                        (String) obj[1],               // username
-                        (String) obj[2],               // nombre
-                        (String) obj[3],               // apellido
-                        (String) obj[4]                // especialización
+                        ((Number) obj[0]).longValue(),
+                        (String) obj[1],
+                        (String) obj[2],
+                        (String) obj[3],
+                        (String) obj[4]
                 ))
                 .toList();
     }
@@ -110,11 +110,11 @@ class UserServiceImplements implements UserService {
         return userRepository.getUsersWhoAreClients()
                 .stream()
                 .map(obj -> new NativeQuery_UserClientDTO(
-                        ((Number) obj[0]).longValue(), // idUsuario
-                        (String) obj[1],               // username
-                        (String) obj[2],               // nombre
-                        (String) obj[3],               // apellido
-                        (String) obj[4]                // correo
+                        ((Number) obj[0]).longValue(),
+                        (String) obj[1],
+                        (String) obj[2],
+                        (String) obj[3],
+                        (String) obj[4]
                 ))
                 .toList();
     }
@@ -151,7 +151,6 @@ class UserServiceImplements implements UserService {
         );
     }
 
-    // Método auxiliar para convertir string de authorities a lista
     private List<Authority> authoritiesFromString(String authoritiesStr) {
         List<Authority> authoritiesList = new ArrayList<>();
         List<String> authoritiesNames = Arrays.asList(authoritiesStr.split(";"));
@@ -168,13 +167,11 @@ class UserServiceImplements implements UserService {
 
     @Override
     public User addUser(DTOUser dtoUser) {
-        // Crear usuario
         User newUser = new User();
         newUser.setUsername(dtoUser.getUsername());
         newUser.setPassword(dtoUser.getPassword());
         newUser.setEnabled(true);
 
-        // Convertir authorities
         List<Authority> authorities = authoritiesFromString(dtoUser.getAuthorities());
 
         return addUser(newUser, authorities);
@@ -182,32 +179,25 @@ class UserServiceImplements implements UserService {
 
     @Override
     public User addUser(User user) {
-        // Por defecto, asignar rol ROLE_USER
         Authority defaultAuthority = authorityRepository.findByName("ROLE_USER");
         return addUser(user, List.of(defaultAuthority));
     }
 
-    // Método privado para registrar usuario con authorities
     private User addUser(User user, List<Authority> authorities) {
-        // Validar que username no exista
         User existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Username: " + user.getUsername() + " is already registered");
         }
 
-        // Validar password (puedes agregar más validaciones)
         if (user.getPassword() == null || user.getPassword().length() < 6) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Password must be at least 6 characters");
         }
 
-        // Encriptar password
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setEnabled(true);
 
-        // Guardar usuario
         User savedUser = userRepository.save(user);
 
-        // Crear relaciones User_Authority
         for (Authority authority : authorities) {
             User_Authority userAuthority = new User_Authority();
             userAuthority.setUser(savedUser);

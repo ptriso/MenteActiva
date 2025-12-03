@@ -1,8 +1,5 @@
 package pe.edu.upc.menteactiva.dtos.responses;
 
-import lombok.*;
-
-import java.time.Duration;
 
 
 import lombok.Generated;

@@ -155,7 +155,6 @@ public class AppointmentServiceImplements implements AppointmentService {
         Appointments appt = appointmentsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
 
-        // ✅ Buscamos por ENUM, no por ID mágico 4
         Status statusCancelada = statusRepository.findByStatusap(StatusAp.CANCELADA)
                 .orElseThrow(() -> new RuntimeException("Estado CANCELADA no existe"));
 

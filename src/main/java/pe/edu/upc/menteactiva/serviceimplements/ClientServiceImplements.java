@@ -120,7 +120,6 @@ public class ClientServiceImplements implements ClientService {
     @Override
     public void createIfNotExists(Long userId) {
 
-        // Si ya tiene perfil de cliente, no hacemos nada
         if (clientRepository.findByUser_Id(userId).isPresent()) {
             return;
         }
@@ -128,7 +127,6 @@ public class ClientServiceImplements implements ClientService {
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-        // Intentar recuperar datos desde el perfil de PROFESIONAL
         var profesionalOpt = professionalsRepository.findByUser_Id(userId);
 
         Clients c = new Clients();
@@ -141,7 +139,6 @@ public class ClientServiceImplements implements ClientService {
             c.setMail(p.getMail());
             c.setPhone(p.getPhone());
         } else {
-            // Sin profesional, valores mínimos
             c.setName("");
             c.setLastname("");
             c.setMail("");
@@ -153,10 +150,8 @@ public class ClientServiceImplements implements ClientService {
 
     @Override
     public List<ClientResponseDTO> listByProfessional(Long idProfessional) {
-        // Buscamos los clientes usando la consulta que creaste en el paso 1
         List<Clients> clients = appointmentRepository.findClientsByProfessionalId(idProfessional);
 
-        // Convertimos la lista de entidades (Clients) a DTOs (ClientResponseDTO)
         return clients.stream()
                 .map(c -> modelMapper.map(c, ClientResponseDTO.class))
                 .collect(Collectors.toList());

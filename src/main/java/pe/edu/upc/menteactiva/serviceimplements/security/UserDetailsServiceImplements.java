@@ -1,7 +1,6 @@
 package pe.edu.upc.menteactiva.serviceimplements.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,14 +16,6 @@ public class UserDetailsServiceImplements implements UserDetailsService {
     @Autowired
     private UserService userService;
 
-   // @Override
-    //public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      //  User userFound = userService.findByUsername(username);
-       // if (userFound == null) {
-         //   throw new UsernameNotFoundException("User not found: " + username);
-       // }
-       // return new UserSecurity(userFound);
-   // }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {

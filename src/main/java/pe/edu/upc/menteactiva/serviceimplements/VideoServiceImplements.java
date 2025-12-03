@@ -42,7 +42,7 @@ public class VideoServiceImplements  implements VideoService {
 
         v = videoRepository.save(v);
         VideoResponseDTO out = modelMapper.map(v, VideoResponseDTO.class);
-        out.setProfessionalId(v.getProfesional().getId()); // <- 1
+        out.setProfessionalId(v.getProfesional().getId());
         return out;
     }
     @Override
@@ -93,12 +93,12 @@ public class VideoServiceImplements  implements VideoService {
         return videoRepository.getMostViewedVideos()
                 .stream()
                 .map(obj -> new NativeQuery_MostViewedVideosDTO(
-                        ((Number) obj[0]).longValue(),    // videoId
-                        (String) obj[1],                   // videoTitle
-                        ((Number) obj[2]).intValue(),      // totalViews
-                        (String) obj[3],                   // authorName
-                        (String) obj[4],                   // authorLastname
-                        ((Number) obj[5]).longValue()      // authorId
+                        ((Number) obj[0]).longValue(),
+                        (String) obj[1],
+                        ((Number) obj[2]).intValue(),
+                        (String) obj[3],
+                        (String) obj[4],
+                        ((Number) obj[5]).longValue()
                 ))
                 .toList();
     }

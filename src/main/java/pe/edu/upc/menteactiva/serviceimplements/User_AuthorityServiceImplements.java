@@ -52,7 +52,6 @@ public class User_AuthorityServiceImplements implements User_AuthorityService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario ya tiene esta autoridad asignada");
         }
 
-        // ✔ CREACIÓN AUTOMÁTICA DEL PERFIL
         if (authority.getName().equals("ROLE_CLIENT")) {
             clientService.createIfNotExists(user.getId());
         }

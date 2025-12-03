@@ -63,13 +63,11 @@ public class UserController {
 
             String jwt = jwtUtilService.generateToken(userSecurity);
 
-            // --- LÓGICA MODIFICADA ---
             Long userId = userSecurity.getUser().getId();
             String authorities = userSecurity.getAuthorities().stream()
                     .map(auth -> auth.getAuthority())
                     .collect(Collectors.joining(";"));
 
-            // --- NUEVA LÓGICA PARA BUSCAR EL ID DEL PERFIL ---
             Long profileId = null;
             if (authorities.contains("ROLE_CLIENT")) {
                 profileId = clientRepository.findByUser_Id(userId)
@@ -89,21 +87,17 @@ public class UserController {
         }
     }
 
-    // Endpoint de Registro
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody DTOUser dtoUser) {
         try {
             System.out.println("📝 Iniciando registro: " + dtoUser.getUsername());
 
-            // Si no especifica authorities, usar ROLE_USER
             if (dtoUser.getAuthorities() == null || dtoUser.getAuthorities().isBlank()) {
                 dtoUser.setAuthorities("ROLE_USER");
             }
 
-            // Registrar usuario (esto funciona correctamente según los logs)
             User newUser = userService.addUser(dtoUser);
 
-            // Construir respuesta manualmente SIN consultar la BD nuevamente
             List<String> authoritiesList = Arrays.asList(dtoUser.getAuthorities().split(";"));
 
             UserResponseDTO response = new UserResponseDTO(
@@ -135,7 +129,6 @@ public class UserController {
         }
     }
 
-    // Obtener usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable("id") Long id) {
         try {

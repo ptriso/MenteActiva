@@ -2,7 +2,6 @@ package pe.edu.upc.menteactiva.services;
 
 import pe.edu.upc.menteactiva.dtos.request.AuthorityRequestDTO;
 import pe.edu.upc.menteactiva.dtos.responses.AuthorityResponseDTO;
-import pe.edu.upc.menteactiva.entities.Authority;
 
 import java.util.List;
 
